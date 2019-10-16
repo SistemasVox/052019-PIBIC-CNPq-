@@ -21,6 +21,7 @@ CREATE TABLE Alternativa (
 
 CREATE TABLE Area_Conhecimento (
     cod_area INTEGER AUTO_INCREMENT PRIMARY KEY,
+    -- cod_area INTEGER PRIMARY KEY AUTOINCREMENT,
     nome_area TEXT NOT NULL UNIQUE
 );
 
