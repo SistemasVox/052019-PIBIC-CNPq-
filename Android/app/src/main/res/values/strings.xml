@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">MultQuest</string>
+    <string name="totalQ">Total de Questões:</string>
+    <string name="totalA">Total Alternativas:</string>
+    <string name="totalAC">Area do Conhecimento:</string>
+    <string name="totalC">Total Conteúdo:</string>
+    <string name="totalD">Total Disciplina:</string>
 </resources>
