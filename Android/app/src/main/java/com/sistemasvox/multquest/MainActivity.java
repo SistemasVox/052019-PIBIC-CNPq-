@@ -1,10 +1,11 @@
 package com.sistemasvox.multquest;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.sistemasvox.multquest.dao.AlternativaDAO;
 import com.sistemasvox.multquest.dao.AreaConhecimentoDAO;
@@ -18,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        atualizarTotal();
+        //atualizarTotal();
     }
 
     private void atualizarTotal() {
@@ -37,5 +38,14 @@ public class MainActivity extends AppCompatActivity {
         areConhe.setText(String.valueOf(new AreaConhecimentoDAO(this).getAlternativas().size()));
         conteudo.setText(new ConteudoDAO(this).getTotalConteudo());
         disc.setText(new DisciplinaDAO(this).getAllDisciplinas().size() + "");
+    }
+
+    public void botaoDados(View v) {
+        setContentView(R.layout.activity_main2);
+        atualizarTotal();
+    }
+
+    public void botaoMenu(View v) {
+        setContentView(R.layout.home);
     }
 }
