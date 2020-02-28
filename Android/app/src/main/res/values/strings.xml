@@ -1,8 +1,16 @@
 <resources>
-    <string name="app_name">MultQuest</string>
-    <string name="totalQ">Total de Questões:</string>
-    <string name="totalA">Total Alternativas:</string>
-    <string name="totalAC">Area do Conhecimento:</string>
-    <string name="totalC">Total Conteúdo:</string>
-    <string name="totalD">Total Disciplina:</string>
+    <string name="app_name">Mult Quest</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_f_simulado">Fazer Simulado</string>
+    <string name="menu_r_questoes">Responder Questões</string>
+    <string name="menu_tools">Simulados Realizados</string>
+    <string name="menu_p_aprendizagem">Progresso de Apredizagem</string>
+    <string name="menu_sobre">Sobre</string>
 </resources>

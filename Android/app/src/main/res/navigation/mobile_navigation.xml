@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.sistemasvox.multquest.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_f_simulado"
+        android:name="com.sistemasvox.multquest.ui.fazerSumulado.FazerSimuladoFragment"
+        android:label="@string/menu_f_simulado"
+        tools:layout="@layout/fragment_f_simulado" />
+
+    <fragment
+        android:id="@+id/nav_r_questoes"
+        android:name="com.sistemasvox.multquest.ui.responderQuestoes.ResponderQuestoesFragment"
+        android:label="@string/menu_r_questoes"
+        tools:layout="@layout/fragment_r_questoes" />
+
+    <fragment
+        android:id="@+id/nav_s_realizados"
+        android:name="com.sistemasvox.multquest.ui.simuladoresRealizados.SimuladosRealiazadosFragment"
+        android:label="@string/menu_tools"
+        tools:layout="@layout/fragment_s_realizados" />
+
+    <fragment
+        android:id="@+id/nav_p_aprendizagem"
+        android:name="com.sistemasvox.multquest.ui.progressoDAprendizagem.ProgressoDeAprendizagemFragment"
+        android:label="@string/menu_p_aprendizagem"
+        tools:layout="@layout/fragment_p_aprendizagem" />
+
+    <fragment
+        android:id="@+id/nav_sobre"
+        android:name="com.sistemasvox.multquest.ui.sobre.SobreFragment"
+        android:label="@string/menu_sobre"
+        tools:layout="@layout/fragment_sobre" />
+</navigation>
