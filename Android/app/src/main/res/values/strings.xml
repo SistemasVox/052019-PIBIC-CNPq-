@@ -13,4 +13,11 @@
     <string name="menu_tools">Simulados Realizados</string>
     <string name="menu_p_aprendizagem">Progresso de Apredizagem</string>
     <string name="menu_sobre">Sobre</string>
+    <string name="st_tempo">Tempo: 0:00:00</string>
+    <string name="menu_disciplina">Matemática</string>
+    <string name="enunciado">1) Isto significa que a matemática trabalha com números, símbolos, figuras geométricas, etc. A partir de axiomas e seguindo raciocínios lógicos, a matemática analisa estruturas, magnitudes/grandezas e vínculos das entidades abstratas.</string>
+    <string name="rd1">A) A matemática pode ser dividida em pura e aplicada tendo os seus elementos a intuição, analise, lógica, construção e individualização.</string>
+    <string name="btnVoltar"><![CDATA[<<]]></string>
+    <string name="bntAvancar"><![CDATA[>>]]></string>
+    <string name="btnFinalizar">Finalizar</string>
 </resources>
