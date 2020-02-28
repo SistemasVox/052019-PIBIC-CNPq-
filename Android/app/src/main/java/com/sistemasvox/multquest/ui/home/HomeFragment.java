@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.sistemasvox.multquest.R;
+import com.sistemasvox.multquest.dao.AlternativaDAO;
 
 public class HomeFragment extends Fragment {
 
@@ -27,7 +28,7 @@ public class HomeFragment extends Fragment {
         homeViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                textView.setText(s);
+                textView.setText(s +  new AlternativaDAO(getContext()).getTotalAlternativas());
             }
         });
         return root;
