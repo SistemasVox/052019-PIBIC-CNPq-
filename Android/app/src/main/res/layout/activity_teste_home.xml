@@ -18,95 +18,122 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/txtDisciplina"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="@string/menu_disciplina"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtTempo" />
-
-
-    <TextView
-        android:id="@+id/txtEnunciado"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@color/colorPrimary"
-        android:gravity="start|fill|fill_horizontal"
-        android:text="@string/enunciado"
-        android:textColor="@android:color/background_dark"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtDisciplina" />
-
-    <RadioGroup
-        android:id="@+id/grupoRadio"
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnFinalizar"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.50"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEnunciado">
+        app:layout_constraintTop_toBottomOf="@+id/txtTempo"
+        app:layout_constraintVertical_bias="0.50">
 
-        <RadioButton
-            android:id="@+id/rd1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:padding="@dimen/nav_header_vertical_spacing"
-            android:text="@string/rd1"
-            android:textSize="18sp" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-        <RadioButton
-            android:id="@+id/rd2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:padding="@dimen/nav_header_vertical_spacing"
-            android:text="@string/rd1"
-            android:textSize="18sp" />
+            <TextView
+                android:id="@+id/txtDisciplina"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:text="@string/menu_disciplina"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <RadioButton
-            android:id="@+id/rd3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:padding="@dimen/nav_header_vertical_spacing"
-            android:text="@string/rd1"
-            android:textSize="18sp" />
 
-        <RadioButton
-            android:id="@+id/rd4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:padding="@dimen/nav_header_vertical_spacing"
-            android:text="@string/rd1"
-            android:textSize="18sp" />
+            <TextView
+                android:id="@+id/txtEnunciado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@color/colorPrimary"
+                android:gravity="start|fill|fill_horizontal"
+                android:text="@string/enunciado"
+                android:textColor="@android:color/background_dark"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtDisciplina" />
 
-        <RadioButton
-            android:id="@+id/rd5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:padding="@dimen/nav_header_vertical_spacing"
-            android:text="@string/rd1"
-            android:textSize="18sp" />
-    </RadioGroup>
+            <RadioGroup
+                android:id="@+id/grupoRadio"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtEnunciado">
+
+                <RadioButton
+                    android:id="@+id/rd1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:padding="@dimen/nav_header_vertical_spacing"
+                    android:text="@string/rd1"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/rd2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:padding="@dimen/nav_header_vertical_spacing"
+                    android:text="@string/rd1"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/rd3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:padding="@dimen/nav_header_vertical_spacing"
+                    android:text="@string/rd1"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/rd4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:padding="@dimen/nav_header_vertical_spacing"
+                    android:text="@string/rd1"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/rd5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:padding="@dimen/nav_header_vertical_spacing"
+                    android:text="@string/rd1"
+                    android:textSize="18sp" />
+            </RadioGroup>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
 
     <Button
         android:id="@+id/btnVoltar"
