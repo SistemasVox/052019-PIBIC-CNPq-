@@ -20,4 +20,6 @@
     <string name="btnVoltar"><![CDATA[<<]]></string>
     <string name="bntAvancar"><![CDATA[>>]]></string>
     <string name="btnFinalizar">Finalizar</string>
+    <string name="txtEscolha">Escolha suas disciplinas:</string>
+    <string name="txtIniciar">Iniciar Simulado</string>
 </resources>

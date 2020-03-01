@@ -36,7 +36,7 @@ public class AreaConhecimentoDAO {
         }
     }
 
-    public ArrayList<AreaConhecimento> getAlternativas() {
+    public ArrayList<AreaConhecimento> getAreas() {
         ArrayList<AreaConhecimento> areaConhecimentos = new ArrayList<AreaConhecimento>();
         open();
         c = db.rawQuery("SELECT * FROM [Area_Conhecimento];", null);
