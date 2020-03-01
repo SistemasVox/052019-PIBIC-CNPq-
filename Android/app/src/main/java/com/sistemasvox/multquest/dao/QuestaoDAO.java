@@ -133,4 +133,16 @@ public class QuestaoDAO {
         db.insert("Conteudo_Questao", null, dados);
         close();
     }
+
+    public String getNomeDiscQuestao(String idQ) {
+        String nome = "";
+        open();
+        c = db.rawQuery("SELECT nome_disciplina FROM Disciplina d, Disciplina_Conteudo dc, Conteudo_Questao cq WHERE" +
+                " d.cod_disciplina = dc.cod_disciplina AND dc.cod_conteudo = cq.cod_conteudo AND cq.cod_questao = '" + idQ + "';", null);
+        while (c.moveToNext()) {
+            nome = c.getString(0);
+        }
+        close();
+        return nome;
+    }
 }
