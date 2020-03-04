@@ -37,4 +37,13 @@ public class Conteudo {
     public void setDesc(String desc) {
         this.desc = desc;
     }
+
+    @Override
+    public String toString() {
+        return "Conteudo{" +
+                "cod='" + cod + '\'' +
+                ", nome='" + nome + '\'' +
+                ", desc='" + desc + '\'' +
+                '}';
+    }
 }

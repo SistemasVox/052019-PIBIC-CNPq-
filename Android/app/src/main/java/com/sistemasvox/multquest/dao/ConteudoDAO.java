@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.sistemasvox.multquest.model.Conteudo;
 
@@ -51,8 +52,9 @@ public class ConteudoDAO {
     public ArrayList<Conteudo> getConteudosDisc(String nomeDisc) {
         ArrayList<Conteudo> conteudos = new ArrayList<Conteudo>();
         open();
-        c = db.rawQuery("SELECT * FROM Conteudo c, Disciplina_Conteudo dc where dc.cod_disciplina = (SELECT cod_disciplina FROM Disciplina WHERE nome_disciplina = '"
-                + nomeDisc + "') and c.cod_conteudo = dc.cod_conteudo;", null);
+        c = db.rawQuery("SELECT * FROM Conteudo c, Disciplina_Conteudo dc where dc.cod_disciplina = (SELECT cod_disciplina FROM Disciplina WHERE " +
+                " nome_disciplina = '"+nomeDisc+"') and c.cod_conteudo = dc.cod_conteudo;", null);
+
         while (c.moveToNext()) {
             conteudos.add(new Conteudo(c.getString(c.getColumnIndex("cod_conteudo")),
                     c.getString(c.getColumnIndex("nome_conteudo")),

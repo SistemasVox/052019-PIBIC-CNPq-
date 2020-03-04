@@ -1,0 +1,55 @@
+package com.sistemasvox.multquest.model;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.TextView;
+
+import com.sistemasvox.multquest.R;
+
+import java.util.List;
+
+public class ConteudoAdapter extends BaseAdapter {
+
+    Context context;
+    List<Conteudo> list;
+
+    public ConteudoAdapter(Context context, List<Conteudo> list) {
+        this.context = context;
+        this.list = list;
+    }
+
+    @Override
+    public int getCount() {
+        return list.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return list.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        //Passo 1 Criar Objetos
+        Conteudo conteudo = list.get(position);
+
+        //Passo 2 Criar Linha (Lista de Layouts)
+        View linha = LayoutInflater.from(context).inflate(R.layout.disciplinas, null);
+
+        //Passo 3
+        CheckBox checkBox = linha.findViewById(R.id.checkBox);
+
+        checkBox.setText(conteudo.getNome());
+
+        return linha;
+    }
+}
