@@ -1,5 +1,6 @@
 package com.sistemasvox.multquest.ui.homeTeste;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,8 +26,10 @@ import java.util.ArrayList;
 public class Escolha extends AppCompatActivity {
 
     private Spinner spArea, spDisc;
-    private ArrayList<String> conteudosSelecionados;
     private LinearLayout linearLayout;
+    private ArrayList<Conteudo> conteudos;
+    private ArrayList<String> conteudosSelecionados;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,15 +46,26 @@ public class Escolha extends AppCompatActivity {
         for (int i = 0; i < linearLayout.getChildCount(); i++) {
             CheckBox cb = (CheckBox) linearLayout.getChildAt(i).findViewById(R.id.checkBox);
             if (cb.isChecked()) {
-                conteudosSelecionados.add(cb.getText().toString());
+                conteudosSelecionados.add(conteudos.get(i).getNome());
             }
         }
 
-        Log.i("raiva", conteudosSelecionados.toString() + "");
+        //Log.i("raiva", conteudosSelecionados.toString() + "");
+
+        try {
+            Intent intent = new Intent(this, TesteHome.class);
+            intent.putExtra("conteudosSelecionados", conteudosSelecionados);
+            startActivity(intent);
+        } catch (Exception e) {
+            Log.i("raiva", e.getMessage() + "");
+        }
+
+
+        //finish();
     }
 
 
-    private void preencherConteudo(ArrayList<Conteudo> conteudos) {
+    private void preencherConteudo() {
         //Log.i("raiva", conteudos.toString() + "");
         LayoutInflater inflater = LayoutInflater.from(this);
         linearLayout.removeAllViewsInLayout();
@@ -89,8 +103,9 @@ public class Escolha extends AppCompatActivity {
                     spDisc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            ArrayList<Conteudo> conteudos = new ConteudoDAO(getApplicationContext()).getConteudosDisc(spDisc.getSelectedItem().toString());
-                            preencherConteudo(conteudos);
+                            conteudos.clear();
+                            conteudos = new ConteudoDAO(getApplicationContext()).getConteudosDisc(spDisc.getSelectedItem().toString());
+                            preencherConteudo();
                         }
 
                         @Override
@@ -99,7 +114,9 @@ public class Escolha extends AppCompatActivity {
                         }
                     });
                 } else {
-                    preencherConteudo(new ConteudoDAO(getApplicationContext()).getConteudosAll());
+                    conteudos.clear();
+                    conteudos = new ConteudoDAO(getApplicationContext()).getConteudosAll();
+                    preencherConteudo();
                 }
             }
 
@@ -111,7 +128,8 @@ public class Escolha extends AppCompatActivity {
     private void instanciarObjs() {
         spArea = (Spinner) findViewById(R.id.spADC);
         spDisc = (Spinner) findViewById(R.id.spDisci);
-        conteudosSelecionados = new ArrayList<>();
         linearLayout = findViewById(R.id.ae_LinearLay);
+        conteudosSelecionados = new ArrayList<>();
+        conteudos = new ArrayList<>();
     }
 }

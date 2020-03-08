@@ -1,13 +1,9 @@
 package com.sistemasvox.multquest.ui.homeTeste;
 
+import android.content.Intent;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,6 +11,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.sistemasvox.multquest.R;
 import com.sistemasvox.multquest.dao.AlternativaDAO;
@@ -27,23 +25,39 @@ import java.util.Random;
 
 public class TesteHome extends AppCompatActivity {
 
+    long ss = 600;//10min
     private TextView txtRel, txtDisc, txtEnun;
     private RadioGroup rdGrupo;
     private RadioButton a, b, c, d, e;
     private ArrayList<RadioButton> arrayListButtons = new ArrayList<>();
     private ArrayList<Alternativa> alternativas = new ArrayList<>();
     private ImageView imageView;
-    long ss = 600;//10min
     private Handler handler = new Handler();
+    private ArrayList<String> conteudosSelecionados;
+    private ArrayList<Questoes> questoes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teste_home);
         instaciarComponentes();
+        pegarOutraClasse();
         construirQuestao();
         cronometro();
+    }
 
+    private void pegarOutraClasse() {
+        Intent intent = getIntent();
+        //Bundle extra = getIntent().getBundleExtra("extra");
+        try {
+            conteudosSelecionados = intent.getStringArrayListExtra("conteudosSelecionados");
+            // Log.i("raiva", conteudosSelecionados.toString() + "");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Log.i("raiva", ex.getMessage() + "");
+        }
+
+        //Log.i("raiva", conteudosSelecionados.toString() + "");
     }
 
     private void construirQuestao() {
@@ -51,14 +65,19 @@ public class TesteHome extends AppCompatActivity {
         //id_Q = "161";
         Questoes questao = new QuestaoDAO(getApplicationContext()).getQuestao(id_Q);
         //Toast.makeText(this, "ID: "+ id_Q, Toast.LENGTH_LONG).show();
+        questoes.clear();
 
+        for (int i = 0; i < conteudosSelecionados.size(); i++) {
+            questoes.addAll(new QuestaoDAO(getApplicationContext()).getQuestoesConteudo(conteudosSelecionados.get(i)));
+        }
+        Log.i("raiva", questoes.size() + "");
         txtEnun.setText(questao.getCod() + ") " + questao.getEnunciado());
         txtDisc.setText(new QuestaoDAO(getApplicationContext()).getNomeDiscQuestao(id_Q));
 
-        String name = "ic_"+txtDisc.getText().toString().toLowerCase().replaceAll("[^\\p{ASCII}]", "");
+        String name = "ic_" + txtDisc.getText().toString().toLowerCase().replaceAll("[^\\p{ASCII}]", "");
 
         Resources res = getResources();
-        int id  = res.getIdentifier(name, "drawable", getPackageName());
+        int id = res.getIdentifier(name, "drawable", getPackageName());
         imageView.setImageResource(id);
 
 
@@ -83,7 +102,7 @@ public class TesteHome extends AppCompatActivity {
     }
 
     private void mensagem(String s) {
-        Toast.makeText(this,  s, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, s, Toast.LENGTH_LONG).show();
     }
 
     private void ocultarTodos() {
@@ -113,6 +132,9 @@ public class TesteHome extends AppCompatActivity {
         arrayListButtons.add(d);
         e = findViewById(R.id.rd5);
         arrayListButtons.add(e);
+
+        conteudosSelecionados = new ArrayList<>();
+        questoes = new ArrayList<>();
     }
 
     private void cronometro() {

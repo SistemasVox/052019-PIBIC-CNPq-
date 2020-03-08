@@ -63,7 +63,7 @@ public class QuestaoDAO {
     public ArrayList<Questoes> getQuestoesConteudo(String nomeConteudo) {
         ArrayList<Questoes> temp = new ArrayList<Questoes>();
         open();
-        c = db.rawQuery("SELECT DISTINCT COUNT(*) FROM Questoes q, Conteudo c, Conteudo_Questao cq\r\n" +
+        c = db.rawQuery("SELECT DISTINCT * FROM Questoes q, Conteudo c, Conteudo_Questao cq " +
                 "WHERE q.cod = cq.cod_questao and  cq.cod_conteudo = c.cod_conteudo and c.nome_conteudo = '" + nomeConteudo + "';", null);
         while (c.moveToNext()) {
             temp.add(new Questoes(c.getString(c.getColumnIndex("cod")),
