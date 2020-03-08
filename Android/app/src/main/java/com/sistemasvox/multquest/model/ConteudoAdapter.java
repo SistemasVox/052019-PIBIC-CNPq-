@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.TextView;
 
 import com.sistemasvox.multquest.R;
 
@@ -43,7 +42,7 @@ public class ConteudoAdapter extends BaseAdapter {
         Conteudo conteudo = list.get(position);
 
         //Passo 2 Criar Linha (Lista de Layouts)
-        View linha = LayoutInflater.from(context).inflate(R.layout.disciplinas, null);
+        View linha = LayoutInflater.from(context).inflate(R.layout.activity_escolha_conteudos, parent, false);
 
         //Passo 3
         CheckBox checkBox = linha.findViewById(R.id.checkBox);

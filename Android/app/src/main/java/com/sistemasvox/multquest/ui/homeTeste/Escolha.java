@@ -1,67 +1,67 @@
 package com.sistemasvox.multquest.ui.homeTeste;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.sistemasvox.multquest.R;
 import com.sistemasvox.multquest.dao.AreaConhecimentoDAO;
 import com.sistemasvox.multquest.dao.ConteudoDAO;
 import com.sistemasvox.multquest.dao.DisciplinaDAO;
 import com.sistemasvox.multquest.model.AreaConhecimento;
 import com.sistemasvox.multquest.model.Conteudo;
-import com.sistemasvox.multquest.model.ConteudoAdapter;
 import com.sistemasvox.multquest.model.Disciplina;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Escolha extends AppCompatActivity {
 
     private Spinner spArea, spDisc;
-    private ChipGroup gpClip;
-    private Chip a, b;
+    private ArrayList<String> conteudosSelecionados;
+    private LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_escolha);
         instanciarObjs();
-        //preencherTela();
-        preencherConteudo();
+        preencherTela();
     }
 
-    private void preencherConteudo() {
-            ArrayList<Conteudo> conteudos = new ConteudoDAO(getApplicationContext()).getConteudosDisc("Química");
-            Log.i("raiva", conteudos.toString()+"");
-            //Log.i("raiva", spDisc.getSelectedItem().toString());
+    public void checarConteudos(View view) {
+        //CheckBox cb = (CheckBox) linearLayout.getChildAt(0).findViewById(R.id.checkBox);
+        //Toast.makeText(getApplicationContext(), cb.isChecked()+"", Toast.LENGTH_SHORT).show();
+        conteudosSelecionados.clear();
+        for (int i = 0; i < linearLayout.getChildCount(); i++) {
+            CheckBox cb = (CheckBox) linearLayout.getChildAt(i).findViewById(R.id.checkBox);
+            if (cb.isChecked()) {
+                conteudosSelecionados.add(cb.getText().toString());
+            }
+        }
+
+        Log.i("raiva", conteudosSelecionados.toString() + "");
+    }
 
 
+    private void preencherConteudo(ArrayList<Conteudo> conteudos) {
+        //Log.i("raiva", conteudos.toString() + "");
+        LayoutInflater inflater = LayoutInflater.from(this);
+        linearLayout.removeAllViewsInLayout();
 
-
-
-        TextView tv = new TextView(this);
-        tv.setText("testView");
-        tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-        ScrollView scrollView = findViewById(R.id.ae_scrollView);
-
-        scrollView.addView(tv);
-
-
-
+        for (int i = 0; i < conteudos.size(); i++) {
+            View view = inflater.inflate(R.layout.activity_escolha_conteudos, linearLayout, false);
+            CheckBox checkBox = view.findViewById(R.id.checkBox);
+            checkBox.setText(conteudos.get(i).getNome());
+            linearLayout.addView(view);
+        }
     }
 
     private void preencherTela() {
@@ -78,37 +78,40 @@ public class Escolha extends AppCompatActivity {
         spArea.setAdapter(adapter);
         spArea.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                //Toast.makeText(getApplicationContext(), "Oi", Toast.LENGTH_LONG).show();
-                Toast.makeText(getApplicationContext(), spArea.getSelectedItem().toString(), Toast.LENGTH_LONG).show();
                 ArrayList<Disciplina> disciplinaArrayList = new DisciplinaDAO(getApplicationContext()).getAllDisciplinas(spArea.getSelectedItem().toString());
                 final ArrayList<String> listaDados2 = new ArrayList<>();
                 for (int i = 0; i < disciplinaArrayList.size(); i++) {
                     listaDados2.add(disciplinaArrayList.get(i).getNome());
                 }
-                ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, listaDados2);
+                ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, listaDados2);
                 spDisc.setAdapter(adapter2);
+                if (!spArea.getSelectedItem().toString().isEmpty()) {
+                    spDisc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            ArrayList<Conteudo> conteudos = new ConteudoDAO(getApplicationContext()).getConteudosDisc(spDisc.getSelectedItem().toString());
+                            preencherConteudo(conteudos);
+                        }
 
-               if (!spArea.getSelectedItem().toString().isEmpty()){
-                   ArrayList<Conteudo> conteudos = new ConteudoDAO(getApplicationContext()).getConteudosDisc(spDisc.getSelectedItem().toString());
-                   Log.i("raiva", conteudos.toString()+"");
-                   Log.i("raiva", spDisc.getSelectedItem().toString());
-                   //imprimirConteudo(conteudos);
-               }
-               //Toast.makeText(getApplicationContext(), conteudos.size(), Toast.LENGTH_LONG).show();
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
 
+                        }
+                    });
+                } else {
+                    preencherConteudo(new ConteudoDAO(getApplicationContext()).getConteudosAll());
+                }
             }
+
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
     }
 
-    private void imprimirConteudo(ArrayList<Conteudo> conteudos) {
-
-    }
-
     private void instanciarObjs() {
         spArea = (Spinner) findViewById(R.id.spADC);
         spDisc = (Spinner) findViewById(R.id.spDisci);
-        // gpClip = (ChipGroup) findViewById(R.id.gpClip);
+        conteudosSelecionados = new ArrayList<>();
+        linearLayout = findViewById(R.id.ae_LinearLay);
     }
 }

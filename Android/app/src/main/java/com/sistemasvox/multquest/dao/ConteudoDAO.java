@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.sistemasvox.multquest.model.Conteudo;
 
@@ -47,6 +46,20 @@ public class ConteudoDAO {
         }
         close();
         return total;
+    }
+
+    public ArrayList<Conteudo> getConteudosAll() {
+        ArrayList<Conteudo> conteudos = new ArrayList<Conteudo>();
+        open();
+        c = db.rawQuery("SELECT * FROM Conteudo;", null);
+
+        while (c.moveToNext()) {
+            conteudos.add(new Conteudo(c.getString(c.getColumnIndex("cod_conteudo")),
+                    c.getString(c.getColumnIndex("nome_conteudo")),
+                    c.getString(c.getColumnIndex("descricao_conteudo"))));
+        }
+        close();
+        return conteudos;
     }
 
     public ArrayList<Conteudo> getConteudosDisc(String nomeDisc) {

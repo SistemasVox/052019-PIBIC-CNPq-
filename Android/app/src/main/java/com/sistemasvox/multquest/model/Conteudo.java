@@ -40,10 +40,6 @@ public class Conteudo {
 
     @Override
     public String toString() {
-        return "Conteudo{" +
-                "cod='" + cod + '\'' +
-                ", nome='" + nome + '\'' +
-                ", desc='" + desc + '\'' +
-                '}';
+        return this.nome;
     }
 }
