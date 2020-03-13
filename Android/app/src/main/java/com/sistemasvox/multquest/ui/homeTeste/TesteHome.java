@@ -15,13 +15,13 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.sistemasvox.multquest.R;
+import com.sistemasvox.multquest.Tools.Aleatorio;
 import com.sistemasvox.multquest.dao.AlternativaDAO;
 import com.sistemasvox.multquest.dao.QuestaoDAO;
 import com.sistemasvox.multquest.model.Alternativa;
 import com.sistemasvox.multquest.model.Questoes;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class TesteHome extends AppCompatActivity {
 
@@ -35,6 +35,8 @@ public class TesteHome extends AppCompatActivity {
     private Handler handler = new Handler();
     private ArrayList<String> conteudosSelecionados;
     private ArrayList<Questoes> questoes;
+    private int posicao = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +44,35 @@ public class TesteHome extends AppCompatActivity {
         setContentView(R.layout.activity_teste_home);
         instaciarComponentes();
         pegarOutraClasse();
-        construirQuestao();
+        contruirQuestoes();
+        construirQuestao(questoes.get((posicao) % questoes.size()));
+        Log.i("raiva", questoes.size() + "");
         cronometro();
+    }
+
+    public void avancar(View view) {
+        construirQuestao(questoes.get(Math.abs((posicao + 1)) % questoes.size()));
+        posicao = Math.abs((posicao + 1)) % questoes.size();
+        construirQuestao(questoes.get(Math.abs((posicao) % questoes.size())));
+        Log.i("raiva", posicao + " ava");
+    }
+
+    public void regredir(View view) {
+        if (posicao == 0) {
+            posicao = 0;
+        } else {
+            posicao = Math.abs((posicao - 1)) % questoes.size();
+        }
+        construirQuestao(questoes.get(Math.abs((posicao)) % questoes.size()));
+        Log.i("raiva", posicao + " reg");
+    }
+
+    private void contruirQuestoes() {
+        questoes.clear();
+        for (int i = 0; i < conteudosSelecionados.size(); i++) {
+            questoes.addAll(new QuestaoDAO(getApplicationContext()).getQuestoesConteudo(conteudosSelecionados.get(i)));
+        }
+        questoes = desordernarQuestoes(questoes);
     }
 
     private void pegarOutraClasse() {
@@ -60,22 +89,19 @@ public class TesteHome extends AppCompatActivity {
         //Log.i("raiva", conteudosSelecionados.toString() + "");
     }
 
-    private void construirQuestao() {
-        String id_Q = String.valueOf(new Random().nextInt(Integer.parseInt(new QuestaoDAO(getApplicationContext()).getTotalQuestoes())) + 1);
-        //id_Q = "161";
-        Questoes questao = new QuestaoDAO(getApplicationContext()).getQuestao(id_Q);
+    private void construirQuestao(Questoes questao) {
+        //String id_Q = String.valueOf(new Random().nextInt(Integer.parseInt(new QuestaoDAO(getApplicationContext()).getTotalQuestoes())) + 1);
+        //String id_Q = "161";
+        //Questoes questao = new QuestaoDAO(getApplicationContext()).getQuestao(id_Q);
         //Toast.makeText(this, "ID: "+ id_Q, Toast.LENGTH_LONG).show();
-        questoes.clear();
+        // Log.i("raiva", questoes.size() + "");
 
-        for (int i = 0; i < conteudosSelecionados.size(); i++) {
-            questoes.addAll(new QuestaoDAO(getApplicationContext()).getQuestoesConteudo(conteudosSelecionados.get(i)));
-        }
-        Log.i("raiva", questoes.size() + "");
-        txtEnun.setText(questao.getCod() + ") " + questao.getEnunciado());
-        txtDisc.setText(new QuestaoDAO(getApplicationContext()).getNomeDiscQuestao(id_Q));
+
+        txtEnun.setText((posicao + 1) + ") " + questao.getEnunciado());
+        txtDisc.setText(new QuestaoDAO(getApplicationContext()).getNomeDiscQuestao(questao.getCod()));
+
 
         String name = "ic_" + txtDisc.getText().toString().toLowerCase().replaceAll("[^\\p{ASCII}]", "");
-
         Resources res = getResources();
         int id = res.getIdentifier(name, "drawable", getPackageName());
         imageView.setImageResource(id);
@@ -85,9 +111,9 @@ public class TesteHome extends AppCompatActivity {
 
 
         alternativas.clear();
-        alternativas = new AlternativaDAO(getApplicationContext()).getAlternativas(id_Q);
+        alternativas = desordernarAlternativas(new AlternativaDAO(getApplicationContext()).getAlternativas(questao.getCod()));
 
-        Log.i("raiva", alternativas.toString());
+        //Log.i("raiva", alternativas.toString());
 
         for (int i = 0; i < alternativas.size(); i++) {
             //arrayListButtons.get(i).setChecked(false);
@@ -101,6 +127,24 @@ public class TesteHome extends AppCompatActivity {
         }
     }
 
+    private ArrayList<Alternativa> desordernarAlternativas(ArrayList<Alternativa> alternativas) {
+        ArrayList<Alternativa> alternativasAUX = new ArrayList<>();
+        ArrayList<Integer> aleatorios = Aleatorio.gerarCombinacaoAleatorio(alternativas.size(), alternativas.size());
+        for (int i = 0; i < alternativas.size(); i++) {
+            alternativasAUX.add(alternativas.get(aleatorios.get(i)));
+        }
+        return alternativasAUX;
+    }
+
+    private ArrayList<Questoes> desordernarQuestoes(ArrayList<Questoes> questoes) {
+        ArrayList<Questoes> questoesAUX = new ArrayList<>();
+        ArrayList<Integer> aleatorios = Aleatorio.gerarCombinacaoAleatorio(questoes.size(), questoes.size());
+        for (int i = 0; i < questoes.size(); i++) {
+            questoesAUX.add(questoes.get(aleatorios.get(i)));
+        }
+        return questoesAUX;
+    }
+
     private void mensagem(String s) {
         Toast.makeText(this, s, Toast.LENGTH_LONG).show();
     }
@@ -112,14 +156,14 @@ public class TesteHome extends AppCompatActivity {
     }
 
     public void proxima(View v) {
-        construirQuestao();
+        construirQuestao(questoes.get((posicao + 1) % questoes.size()));
     }
 
     private void instaciarComponentes() {
-        txtRel = (TextView) findViewById(R.id.txtTempo);
-        txtDisc = (TextView) findViewById(R.id.txtDisciplina);
-        txtEnun = (TextView) findViewById(R.id.txtEnunciado);
-        imageView = (ImageView) findViewById(R.id.imgDisci);
+        txtRel = findViewById(R.id.txtTempo);
+        txtDisc = findViewById(R.id.txtDisciplina);
+        txtEnun = findViewById(R.id.txtEnunciado);
+        imageView = findViewById(R.id.imgDisci);
 
         rdGrupo = findViewById(R.id.grupoRadio);
         a = findViewById(R.id.rd1);
@@ -180,7 +224,7 @@ public class TesteHome extends AppCompatActivity {
 
     public String zero(Long l) {
         if (l < 10) {
-            return "0" + String.valueOf(l);
+            return "0" + l;
         } else {
             return String.valueOf(l);
         }

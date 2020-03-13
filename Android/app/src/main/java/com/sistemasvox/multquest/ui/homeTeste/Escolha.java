@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -42,20 +43,26 @@ public class Escolha extends AppCompatActivity {
     public void checarConteudos(View view) {
         //CheckBox cb = (CheckBox) linearLayout.getChildAt(0).findViewById(R.id.checkBox);
         //Toast.makeText(getApplicationContext(), cb.isChecked()+"", Toast.LENGTH_SHORT).show();
+        int t = 0;
         conteudosSelecionados.clear();
         for (int i = 0; i < linearLayout.getChildCount(); i++) {
             CheckBox cb = (CheckBox) linearLayout.getChildAt(i).findViewById(R.id.checkBox);
             if (cb.isChecked()) {
                 conteudosSelecionados.add(conteudos.get(i).getNome());
+                t++;
             }
         }
 
         //Log.i("raiva", conteudosSelecionados.toString() + "");
 
         try {
-            Intent intent = new Intent(this, TesteHome.class);
-            intent.putExtra("conteudosSelecionados", conteudosSelecionados);
-            startActivity(intent);
+            if (t > 0){
+                Intent intent = new Intent(this, TesteHome.class);
+                intent.putExtra("conteudosSelecionados", conteudosSelecionados);
+                startActivity(intent);
+            }else{
+                Toast.makeText(getApplicationContext(), "Selecione ao menos 1 conteúdo.", Toast.LENGTH_SHORT).show();
+            }
         } catch (Exception e) {
             Log.i("raiva", e.getMessage() + "");
         }
