@@ -19,6 +19,7 @@ import com.sistemasvox.multquest.Tools.Aleatorio;
 import com.sistemasvox.multquest.dao.AlternativaDAO;
 import com.sistemasvox.multquest.dao.QuestaoDAO;
 import com.sistemasvox.multquest.model.Alternativa;
+import com.sistemasvox.multquest.model.Questionario;
 import com.sistemasvox.multquest.model.Questoes;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class TesteHome extends AppCompatActivity {
     private Handler handler = new Handler();
     private ArrayList<String> conteudosSelecionados;
     private ArrayList<Questoes> questoes;
+    private ArrayList<Questionario> questionario;
     private int posicao = 0;
 
 
@@ -45,34 +47,50 @@ public class TesteHome extends AppCompatActivity {
         instaciarComponentes();
         pegarOutraClasse();
         contruirQuestoes();
-        construirQuestao(questoes.get((posicao) % questoes.size()));
+        construirQuestao(questionario.get(0).getQuestao());
         Log.i("raiva", questoes.size() + "");
         cronometro();
     }
 
+    public void checaSelecao(View view) {
+        int index = rdGrupo.indexOfChild(findViewById(rdGrupo.getCheckedRadioButtonId()));
+
+        Toast.makeText(getApplicationContext(), index + "", Toast.LENGTH_SHORT).show();
+        
+        questionario.get(posicao).setResposta(index);
+    }
+
     public void avancar(View view) {
-        construirQuestao(questoes.get(Math.abs((posicao + 1)) % questoes.size()));
-        posicao = Math.abs((posicao + 1)) % questoes.size();
-        construirQuestao(questoes.get(Math.abs((posicao) % questoes.size())));
+        if (posicao == questionario.size() - 1) {
+            posicao = questionario.size() - 1;
+        } else {
+            posicao++;
+        }
+        construirQuestao(questionario.get(posicao).getQuestao());
         Log.i("raiva", posicao + " ava");
+
     }
 
     public void regredir(View view) {
         if (posicao == 0) {
             posicao = 0;
         } else {
-            posicao = Math.abs((posicao - 1)) % questoes.size();
+            posicao--;
         }
-        construirQuestao(questoes.get(Math.abs((posicao)) % questoes.size()));
+        construirQuestao(questionario.get(posicao).getQuestao());
         Log.i("raiva", posicao + " reg");
     }
 
     private void contruirQuestoes() {
         questoes.clear();
+        questionario.clear();
         for (int i = 0; i < conteudosSelecionados.size(); i++) {
             questoes.addAll(new QuestaoDAO(getApplicationContext()).getQuestoesConteudo(conteudosSelecionados.get(i)));
         }
         questoes = desordernarQuestoes(questoes);
+        for (int i = 0; i < questoes.size(); i++) {
+            questionario.add(new Questionario(questoes.get(i), desordernarAlternativas(new AlternativaDAO(getApplicationContext()).getAlternativas(questoes.get(i).getCod()))));
+        }
     }
 
     private void pegarOutraClasse() {
@@ -111,7 +129,8 @@ public class TesteHome extends AppCompatActivity {
 
 
         alternativas.clear();
-        alternativas = desordernarAlternativas(new AlternativaDAO(getApplicationContext()).getAlternativas(questao.getCod()));
+        //alternativas = desordernarAlternativas(new AlternativaDAO(getApplicationContext()).getAlternativas(questao.getCod()));
+        alternativas = questionario.get(posicao).getAlternativas();
 
         //Log.i("raiva", alternativas.toString());
 
@@ -179,6 +198,7 @@ public class TesteHome extends AppCompatActivity {
 
         conteudosSelecionados = new ArrayList<>();
         questoes = new ArrayList<>();
+        questionario = new ArrayList<>();
     }
 
     private void cronometro() {
