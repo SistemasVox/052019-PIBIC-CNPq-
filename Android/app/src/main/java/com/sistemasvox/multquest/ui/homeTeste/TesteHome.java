@@ -52,33 +52,49 @@ public class TesteHome extends AppCompatActivity {
         cronometro();
     }
 
-    public void checaSelecao(View view) {
-        int index = rdGrupo.indexOfChild(findViewById(rdGrupo.getCheckedRadioButtonId()));
+    public void finalizar(View view) {
+        int parar = 0;
+        for (int i = 0; i < questionario.size(); i++) {
+            if (questionario.get(i).getResposta() == -1)
+                parar++;
+        }
+        if (parar != 0) {
+            Toast.makeText(getApplicationContext(), "Ainda tem questões não respondidas", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "Salvando.", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+    }
 
-        Toast.makeText(getApplicationContext(), index + "", Toast.LENGTH_SHORT).show();
-        
+
+    private void atualizarResposta() {
+        int index = rdGrupo.indexOfChild(findViewById(rdGrupo.getCheckedRadioButtonId()));
+        // Toast.makeText(getApplicationContext(), index + "", Toast.LENGTH_SHORT).show();
         questionario.get(posicao).setResposta(index);
+        Log.i("raiva", questionario.get(posicao).getResposta() + "");
     }
 
     public void avancar(View view) {
+        atualizarResposta();
         if (posicao == questionario.size() - 1) {
             posicao = questionario.size() - 1;
         } else {
             posicao++;
         }
         construirQuestao(questionario.get(posicao).getQuestao());
-        Log.i("raiva", posicao + " ava");
+        //Log.i("raiva", posicao + " ava");
 
     }
 
     public void regredir(View view) {
+        atualizarResposta();
         if (posicao == 0) {
             posicao = 0;
         } else {
             posicao--;
         }
         construirQuestao(questionario.get(posicao).getQuestao());
-        Log.i("raiva", posicao + " reg");
+        //Log.i("raiva", posicao + " reg");
     }
 
     private void contruirQuestoes() {
@@ -128,7 +144,7 @@ public class TesteHome extends AppCompatActivity {
         //Toast.makeText(this, "ID: " + id + " nome: " + name, Toast.LENGTH_LONG).show();
 
 
-        alternativas.clear();
+        //alternativas.clear();
         //alternativas = desordernarAlternativas(new AlternativaDAO(getApplicationContext()).getAlternativas(questao.getCod()));
         alternativas = questionario.get(posicao).getAlternativas();
 
@@ -144,6 +160,11 @@ public class TesteHome extends AppCompatActivity {
         for (int j = alternativas.size(); j < arrayListButtons.size(); j++) {
             arrayListButtons.get(j).setVisibility(View.INVISIBLE);
         }
+        if (questionario.get(posicao).getResposta() != -1) {
+            ((RadioButton) rdGrupo.getChildAt(questionario.get(posicao).getResposta())).setChecked(true);
+            Log.i("raiva", questionario.get(posicao).getResposta() + "");
+        }
+
     }
 
     private ArrayList<Alternativa> desordernarAlternativas(ArrayList<Alternativa> alternativas) {
