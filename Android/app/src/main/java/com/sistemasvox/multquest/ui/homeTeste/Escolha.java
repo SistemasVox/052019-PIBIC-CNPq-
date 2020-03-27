@@ -57,7 +57,7 @@ public class Escolha extends AppCompatActivity {
 
         try {
             if (t > 0){
-                Intent intent = new Intent(this, TesteHome.class);
+                Intent intent = new Intent(this, ResponderQuestao.class);
                 intent.putExtra("conteudosSelecionados", conteudosSelecionados);
                 startActivity(intent);
             }else{
