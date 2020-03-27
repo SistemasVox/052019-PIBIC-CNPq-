@@ -1,5 +1,6 @@
 package com.sistemasvox.multquest.ui.responderQuestoes;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,8 @@ public class ResponderQuestoesFragment extends Fragment {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
+                Intent i = getActivity().getIntent();
+                i.putExtra("modoQuestao", "0");
             }
         });
         return root;

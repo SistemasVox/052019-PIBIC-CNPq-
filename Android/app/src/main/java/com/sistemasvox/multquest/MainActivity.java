@@ -2,6 +2,7 @@ package com.sistemasvox.multquest;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
@@ -54,7 +55,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startEscolhas(View view) {
+
+
+        //Log.i("raiva", getIntent().getStringExtra("modoQuestao") + "");
         Intent i = new Intent(this, Escolha.class);
+        i.putExtra("modoQuestao", getIntent().getStringExtra("modoQuestao"));
         startActivity(i);
         //finish();
     }

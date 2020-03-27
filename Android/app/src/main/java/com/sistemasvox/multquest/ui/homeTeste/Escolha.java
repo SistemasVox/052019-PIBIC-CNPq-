@@ -30,6 +30,7 @@ public class Escolha extends AppCompatActivity {
     private LinearLayout linearLayout;
     private ArrayList<Conteudo> conteudos;
     private ArrayList<String> conteudosSelecionados;
+    private String modo = "ZZZ";
 
 
     @Override
@@ -57,9 +58,17 @@ public class Escolha extends AppCompatActivity {
 
         try {
             if (t > 0){
-                Intent intent = new Intent(this, ResponderQuestao.class);
-                intent.putExtra("conteudosSelecionados", conteudosSelecionados);
-                startActivity(intent);
+                if (modo.equals("0")) {
+                    Intent intent = new Intent(this, ResponderQuestao.class);
+                    intent.putExtra("conteudosSelecionados", conteudosSelecionados);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(this, TesteHome.class);
+                    intent.putExtra("conteudosSelecionados", conteudosSelecionados);
+                    startActivity(intent);
+                }
+                //Log.i("raiva", modo + "");
+                finish();
             }else{
                 Toast.makeText(getApplicationContext(), "Selecione ao menos 1 conteúdo.", Toast.LENGTH_SHORT).show();
             }
@@ -138,5 +147,8 @@ public class Escolha extends AppCompatActivity {
         linearLayout = findViewById(R.id.ae_LinearLay);
         conteudosSelecionados = new ArrayList<>();
         conteudos = new ArrayList<>();
+        Intent i = getIntent();
+        modo = i.getStringExtra("modoQuestao");
+        //Log.i("raiva", modo + "");
     }
 }

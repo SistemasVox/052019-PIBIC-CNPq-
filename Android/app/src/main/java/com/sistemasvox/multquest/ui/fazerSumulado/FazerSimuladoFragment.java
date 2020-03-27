@@ -1,6 +1,8 @@
 package com.sistemasvox.multquest.ui.fazerSumulado;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +30,9 @@ public class FazerSimuladoFragment extends Fragment {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
+                Intent i = getActivity().getIntent();
+                i.putExtra("modoQuestao", "1");
+
             }
         });
         return root;
