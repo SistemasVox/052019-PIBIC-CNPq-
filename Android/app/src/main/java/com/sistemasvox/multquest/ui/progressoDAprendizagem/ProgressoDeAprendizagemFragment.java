@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.sistemasvox.multquest.MainActivity;
 import com.sistemasvox.multquest.R;
 
 public class ProgressoDeAprendizagemFragment extends Fragment {
@@ -32,4 +33,6 @@ public class ProgressoDeAprendizagemFragment extends Fragment {
         });
         return root;
     }
+
+
 }

@@ -14,10 +14,20 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.sistemasvox.multquest.dao.DisciplinaDAO;
+import com.sistemasvox.multquest.model.Disciplina;
 import com.sistemasvox.multquest.ui.homeTeste.Escolha;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,6 +61,29 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
         //Toast.makeText(this, new AlternativaDAO(this).getTotalAlternativas(), Toast.LENGTH_LONG).show();
+    preencherGrafico();
+    }
+
+    public void preencherGrafico() {
+        PieChart grafico = (PieChart) findViewById(R.id.graficoDisciplinas);
+
+        List<PieEntry> entradasGraficos = new ArrayList<>();
+        ArrayList<Disciplina> disciplinas =  new DisciplinaDAO(this).getAllDisciplinas();
+
+
+        for (int i = 0; i < disciplinas.size(); i++) {
+            entradasGraficos.add(new PieEntry((float) 100/13, disciplinas.get(i).getNome()));
+        }
+
+        PieDataSet dataSet = new PieDataSet(entradasGraficos, "Legenda do Gráfico (disciplinas)");
+        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+
+        PieData pieData = new PieData(dataSet);
+
+        grafico.setData(pieData);
+
+        grafico.invalidate();
+
 
     }
 
