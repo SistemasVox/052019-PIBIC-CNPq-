@@ -61,11 +61,11 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
         //Toast.makeText(this, new AlternativaDAO(this).getTotalAlternativas(), Toast.LENGTH_LONG).show();
-    preencherGrafico();
     }
 
-    public void preencherGrafico() {
+    public void preencherGrafico(View view) {
         PieChart grafico = (PieChart) findViewById(R.id.graficoDisciplinas);
+        Log.i("raiva", findViewById(R.id.graficoDisciplinas) + "");
 
         List<PieEntry> entradasGraficos = new ArrayList<>();
         ArrayList<Disciplina> disciplinas =  new DisciplinaDAO(this).getAllDisciplinas();

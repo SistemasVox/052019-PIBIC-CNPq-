@@ -22,4 +22,5 @@
     <string name="btnFinalizar">Finalizar</string>
     <string name="txtEscolha">Escolha suas disciplinas:</string>
     <string name="txtIniciar">Iniciar Simulado</string>
+    <string name="txtLoadProgresso">Carregar Progresso</string>
 </resources>
