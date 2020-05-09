@@ -1,16 +1,14 @@
 CREATE TABLE Questionario (
-	id BIGINT PRIMARY KEY,
+	cod_p int,
 	cod_q int,
 	cod_a int,
-    FOREIGN KEY (cod_q)
-        REFERENCES Questoes (cod),
-    FOREIGN KEY (cod_a)
-        REFERENCES Alternativa (cod)
+    FOREIGN KEY (cod_p)
+        REFERENCES Progresso (id)
 );
 
 CREATE TABLE Progresso (
 	id BIGINT PRIMARY KEY,
-	cod_q int,
-    FOREIGN KEY (cod_q)
-        REFERENCES Questionario (cod)
+	tempo_total INT, -- Tempo total para a realização do questionário.
+	tempo_realizacao INT, -- Tempo gasto.
+	data_time TIMESTAMP -- Data de realização do questionário.
 );

@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.sistemasvox.multquest.R;
 import com.sistemasvox.multquest.dao.AlternativaDAO;
+import com.sistemasvox.multquest.dao.QuestaoDAO;
 
 public class HomeFragment extends Fragment {
 
@@ -28,7 +29,7 @@ public class HomeFragment extends Fragment {
         homeViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                textView.setText(s +  new AlternativaDAO(getContext()).getTotalAlternativas());
+                textView.setText(s + getResources().getString(R.string.app_name) +" consta com "+ new QuestaoDAO(getContext()).getTotalQuestoes() +" questões, e " +  new AlternativaDAO(getContext()).getTotalAlternativas() + " alternativas.");
             }
         });
         return root;

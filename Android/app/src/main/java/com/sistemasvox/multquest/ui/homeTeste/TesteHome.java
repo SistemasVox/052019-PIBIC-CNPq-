@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 public class TesteHome extends AppCompatActivity {
 
-    long ss = 600;//10min
+    private long tempoS = 600;//10min
     private TextView txtRel, txtDisc, txtEnun;
     private RadioGroup rdGrupo;
     private RadioButton a, b, c, d, e;
@@ -48,7 +48,9 @@ public class TesteHome extends AppCompatActivity {
         pegarOutraClasse();
         contruirQuestoes();
         construirQuestao(questionario.get(0).getQuestao());
-        Log.i("raiva", questoes.size() + "");
+        //Log.i("raiva", questoes.size() + "");
+        tempoS = questoes.size() * 60; //1min para cada questão ser respondida.
+        mensagem("Boa sorte, você tem 1 (um) minuto para responder cada questão.");
         cronometro();
     }
 
@@ -225,12 +227,12 @@ public class TesteHome extends AppCompatActivity {
     private void cronometro() {
         new Thread() {
             public void run() {
-                while (ss >= 0) {
+                while (tempoS >= 0) {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            txtRel.setText("Tempo Restante: " + zero(ss / 3600) + ":" + zero(ss / 60) + ":" + zero(ss % 60) + ".");
-                            ss--;
+                            txtRel.setText("Tempo Restante: " + zero(tempoS / 3600) + ":" + zero(tempoS / 60) + ":" + zero(tempoS % 60) + ".");
+                            tempoS--;
                         }
                     });
                     try {
@@ -245,7 +247,8 @@ public class TesteHome extends AppCompatActivity {
     }
 
     private void sair() {
-
+        
+        salvarQuestoes();
 
         new Thread() {
             public void run() {
@@ -261,6 +264,12 @@ public class TesteHome extends AppCompatActivity {
 
             }
         }.start();
+    }
+
+    private void salvarQuestoes() {
+        for (int i  = 0; i < questionario.size(); i ++) {
+            
+        }
     }
 
     public String zero(Long l) {
