@@ -38,6 +38,7 @@ public class ControladoraSimulado extends AppCompatActivity {
     private ArrayList<Questoes> questoes;
     private ArrayList<Questionario> questionario;
     private int posicao = 0;
+    private int minPQ = 10;
 
 
     @Override
@@ -48,10 +49,21 @@ public class ControladoraSimulado extends AppCompatActivity {
         pegarOutraClasse();
         contruirQuestoes();
         construirQuestao(questionario.get(0).getQuestao());
+        checarSalvar();
         //Log.i("raiva", questoes.size() + "");
-        tempoS = questoes.size() * 60; //1min para cada questão ser respondida.
+        tempoS = questoes.size() * minPQ; //1min para cada questão ser respondida.
         mensagem("Boa sorte, você tem 1 (um) minuto para responder cada questão.");
         cronometro();
+    }
+
+    private void checarSalvar() {
+        rdGrupo.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                atualizarResposta();
+            }
+
+        });
     }
 
     public void finalizar(View view) {
@@ -64,6 +76,7 @@ public class ControladoraSimulado extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Ainda tem questões não respondidas", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getApplicationContext(), "Salvando.", Toast.LENGTH_SHORT).show();
+            salvarQuestoes();
             finish();
         }
     }
@@ -77,7 +90,6 @@ public class ControladoraSimulado extends AppCompatActivity {
     }
 
     public void avancar(View view) {
-        atualizarResposta();
         if (posicao == questionario.size() - 1) {
             posicao = questionario.size() - 1;
         } else {
@@ -89,7 +101,6 @@ public class ControladoraSimulado extends AppCompatActivity {
     }
 
     public void regredir(View view) {
-        atualizarResposta();
         if (posicao == 0) {
             posicao = 0;
         } else {
@@ -242,6 +253,7 @@ public class ControladoraSimulado extends AppCompatActivity {
                     }
                 }
                 sair();
+                finish();
             }
         }.start();
     }
@@ -257,7 +269,6 @@ public class ControladoraSimulado extends AppCompatActivity {
                     @Override
                     public void run() {
                         Toast.makeText(getApplicationContext(), "Seu tempo acabou.", Toast.LENGTH_SHORT).show();
-                        finish();
                         //System.exit(0);
                     }
                 });
@@ -268,7 +279,11 @@ public class ControladoraSimulado extends AppCompatActivity {
 
     private void salvarQuestoes() {
         for (int i  = 0; i < questionario.size(); i ++) {
-            
+            if (questionario.get(i).getResposta() != -1) {
+                Log.i("raiva", questionario.get(i).getQuestao().getEnunciado() + " == " + questionario.get(i).getAlternativas().get(questionario.get(i).getResposta()).getResposta());
+            } else {
+                Log.i("raiva", questionario.get(i).getQuestao().getEnunciado() + " == Ficou sem resposta.");
+            }
         }
     }
 
