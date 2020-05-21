@@ -1,11 +1,11 @@
-package com.sistemasvox.multquest.ui.homeTeste;
+package com.sistemasvox.multquest.ui.ControllSimulado;
 
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -24,16 +24,14 @@ import com.sistemasvox.multquest.model.Questoes;
 
 import java.util.ArrayList;
 
-public class TesteHome extends AppCompatActivity {
+public class ControladoraDesenhoTelaSimulado extends AppCompatActivity {
 
-    private long tempoS = 600;//10min
     private TextView txtRel, txtDisc, txtEnun;
     private RadioGroup rdGrupo;
     private RadioButton a, b, c, d, e;
     private ArrayList<RadioButton> arrayListButtons = new ArrayList<>();
     private ArrayList<Alternativa> alternativas = new ArrayList<>();
     private ImageView imageView;
-    private Handler handler = new Handler();
     private ArrayList<String> conteudosSelecionados;
     private ArrayList<Questoes> questoes;
     private ArrayList<Questionario> questionario;
@@ -48,23 +46,17 @@ public class TesteHome extends AppCompatActivity {
         pegarOutraClasse();
         contruirQuestoes();
         construirQuestao(questionario.get(0).getQuestao());
-        //Log.i("raiva", questoes.size() + "");
-        tempoS = questoes.size() * 60; //1min para cada questão ser respondida.
-        mensagem("Boa sorte, você tem 1 (um) minuto para responder cada questão.");
-        cronometro();
+        Log.i("raiva", questoes.size() + "");
     }
 
     public void finalizar(View view) {
-        int parar = 0;
-        for (int i = 0; i < questionario.size(); i++) {
-            if (questionario.get(i).getResposta() == -1)
-                parar++;
-        }
-        if (parar != 0) {
-            Toast.makeText(getApplicationContext(), "Ainda tem questões não respondidas", Toast.LENGTH_SHORT).show();
-        } else {
+        atualizarResposta();
+        if (posicao == (questionario.size() - 1)) {
             Toast.makeText(getApplicationContext(), "Salvando.", Toast.LENGTH_SHORT).show();
             finish();
+        } else {
+            posicao++;
+            construirQuestao(questionario.get(posicao).getQuestao());
         }
     }
 
@@ -73,30 +65,7 @@ public class TesteHome extends AppCompatActivity {
         int index = rdGrupo.indexOfChild(findViewById(rdGrupo.getCheckedRadioButtonId()));
         // Toast.makeText(getApplicationContext(), index + "", Toast.LENGTH_SHORT).show();
         questionario.get(posicao).setResposta(index);
-        Log.i("raiva", questionario.get(posicao).getResposta() + "");
-    }
-
-    public void avancar(View view) {
-        atualizarResposta();
-        if (posicao == questionario.size() - 1) {
-            posicao = questionario.size() - 1;
-        } else {
-            posicao++;
-        }
-        construirQuestao(questionario.get(posicao).getQuestao());
-        //Log.i("raiva", posicao + " ava");
-
-    }
-
-    public void regredir(View view) {
-        atualizarResposta();
-        if (posicao == 0) {
-            posicao = 0;
-        } else {
-            posicao--;
-        }
-        construirQuestao(questionario.get(posicao).getQuestao());
-        //Log.i("raiva", posicao + " reg");
+        //Log.i("raiva", questionario.get(posicao).getResposta() + "");
     }
 
     private void contruirQuestoes() {
@@ -197,10 +166,6 @@ public class TesteHome extends AppCompatActivity {
         }
     }
 
-    public void proxima(View v) {
-        construirQuestao(questoes.get((posicao + 1) % questoes.size()));
-    }
-
     private void instaciarComponentes() {
         txtRel = findViewById(R.id.txtTempo);
         txtDisc = findViewById(R.id.txtDisciplina);
@@ -222,54 +187,21 @@ public class TesteHome extends AppCompatActivity {
         conteudosSelecionados = new ArrayList<>();
         questoes = new ArrayList<>();
         questionario = new ArrayList<>();
-    }
 
-    private void cronometro() {
-        new Thread() {
-            public void run() {
-                while (tempoS >= 0) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            txtRel.setText("Tempo Restante: " + zero(tempoS / 3600) + ":" + zero(tempoS / 60) + ":" + zero(tempoS % 60) + ".");
-                            tempoS--;
-                        }
-                    });
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                sair();
-            }
-        }.start();
-    }
+        //Modificações
+        txtRel.setVisibility(View.INVISIBLE);
 
-    private void sair() {
-        
-        salvarQuestoes();
+        Button voltar = findViewById(R.id.btnVoltar);
+        voltar.setVisibility(View.INVISIBLE);
+        Button avancar = findViewById(R.id.btnAvancar);
+        avancar.setVisibility(View.INVISIBLE);
 
-        new Thread() {
-            public void run() {
+        Button finalizar = findViewById(R.id.btnFinalizar);
+        finalizar.setText("Próxima");
+        //finalizar.setBackgroundResource(R.drawable.ic_voltar);
+        finalizar.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_right_arrow, 0);
+        finalizar.getLayoutParams().width = finalizar.getLayoutParams().MATCH_PARENT;
 
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), "Seu tempo acabou.", Toast.LENGTH_SHORT).show();
-                        finish();
-                        //System.exit(0);
-                    }
-                });
-
-            }
-        }.start();
-    }
-
-    private void salvarQuestoes() {
-        for (int i  = 0; i < questionario.size(); i ++) {
-            
-        }
     }
 
     public String zero(Long l) {

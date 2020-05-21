@@ -1,4 +1,4 @@
-package com.sistemasvox.multquest.ui.homeTeste;
+package com.sistemasvox.multquest.ui.ControllSimulado;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,7 +24,7 @@ import com.sistemasvox.multquest.model.Disciplina;
 
 import java.util.ArrayList;
 
-public class Escolha extends AppCompatActivity {
+public class ControladoraMenuModoSimuladoResponderQuestao extends AppCompatActivity {
 
     private Spinner spArea, spDisc;
     private LinearLayout linearLayout;
@@ -59,11 +59,11 @@ public class Escolha extends AppCompatActivity {
         try {
             if (t > 0){
                 if (modo.equals("0")) {
-                    Intent intent = new Intent(this, ResponderQuestao.class);
+                    Intent intent = new Intent(this, ControladoraDesenhoTelaSimulado.class);
                     intent.putExtra("conteudosSelecionados", conteudosSelecionados);
                     startActivity(intent);
                 } else {
-                    Intent intent = new Intent(this, TesteHome.class);
+                    Intent intent = new Intent(this, ControladoraSimulado.class);
                     intent.putExtra("conteudosSelecionados", conteudosSelecionados);
                     startActivity(intent);
                 }

@@ -19,12 +19,10 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.sistemasvox.multquest.dao.DisciplinaDAO;
 import com.sistemasvox.multquest.model.Disciplina;
-import com.sistemasvox.multquest.ui.homeTeste.Escolha;
+import com.sistemasvox.multquest.ui.ControllSimulado.ControladoraMenuModoSimuladoResponderQuestao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Log.i("raiva", getIntent().getStringExtra("modoQuestao") + "");
-        Intent i = new Intent(this, Escolha.class);
+        Intent i = new Intent(this, ControladoraMenuModoSimuladoResponderQuestao.class);
         i.putExtra("modoQuestao", getIntent().getStringExtra("modoQuestao"));
         startActivity(i);
         //finish();

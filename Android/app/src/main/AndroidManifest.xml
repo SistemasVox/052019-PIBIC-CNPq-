@@ -19,21 +19,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.homeTeste.Escolha">
+        <activity android:name=".ui.ControllSimulado.ControladoraMenuModoSimuladoResponderQuestao">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.homeTeste.TesteHome">
+        <activity android:name=".ui.ControllSimulado.ControladoraSimulado">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.homeTeste.ResponderQuestao">
+        <activity android:name=".ui.ControllSimulado.ControladoraDesenhoTelaSimulado">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

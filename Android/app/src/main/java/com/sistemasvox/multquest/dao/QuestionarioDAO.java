@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.sistemasvox.multquest.model.Alternativa;
 import com.sistemasvox.multquest.model.Progresso;
 import com.sistemasvox.multquest.model.Questoes;
 
@@ -60,11 +61,11 @@ public class QuestionarioDAO {
         return null;
     }
 
-    public String getConsultarQuestaoConteudo(String codQ, String codC) {
+    public String getConsultarProgressoQuestionario(String codP) {
         String total = "0";
         open();
-        c = db.rawQuery("SELECT DISTINCT COUNT(*) FROM Questoes q, Conteudo c, Conteudo_Questao cq\r\n" +
-                "WHERE q.cod = cq.cod_questao and  cq.cod_conteudo = c.cod_conteudo and c.cod_conteudo = '" + codC + "' and q.cod = '" + codQ + "';", null);
+        c = db.rawQuery("SELECT DISTINCT COUNT(*) FROM Progresso p, Questionario q \r\n" +
+                "WHERE p.id = q.cod_p and p.id = '" + codP + "';", null);
         while (c.moveToNext()) {
             total = c.getString(0);
         }
@@ -72,35 +73,13 @@ public class QuestionarioDAO {
         return total;
     }
 
-    public void salvarQuestao(Questoes questao) {
+    public void salvarQuestionario(Progresso progresso, Questoes questao, Alternativa alternativa) {
         open();
         ContentValues dados = new ContentValues();
-        dados.put("cod", questao.getCod());
-        dados.put("enunciado", questao.getEnunciado());
-        dados.put("dificuldade", questao.getDificuldade());
-        dados.put("referencia", questao.getReferencia());
+        dados.put("cod_p", progresso.getId());
+        dados.put("cod_q", questao.getCod());
+        dados.put("cod_a", alternativa.getCod());
         db.insert("Questoes", null, dados);
         close();
-    }
-
-    public void associarQuestaoConteudo(String codQ, String codC) {
-        open();
-        ContentValues dados = new ContentValues();
-        dados.put("cod_conteudo", codC);
-        dados.put("cod_questao", codQ);
-        db.insert("Conteudo_Questao", null, dados);
-        close();
-    }
-
-    public String getNomeDiscQuestao(String idQ) {
-        String nome = "";
-        open();
-        c = db.rawQuery("SELECT nome_disciplina FROM Disciplina d, Disciplina_Conteudo dc, Conteudo_Questao cq WHERE" +
-                " d.cod_disciplina = dc.cod_disciplina AND dc.cod_conteudo = cq.cod_conteudo AND cq.cod_questao = '" + idQ + "';", null);
-        while (c.moveToNext()) {
-            nome = c.getString(0);
-        }
-        close();
-        return nome;
     }
 }
