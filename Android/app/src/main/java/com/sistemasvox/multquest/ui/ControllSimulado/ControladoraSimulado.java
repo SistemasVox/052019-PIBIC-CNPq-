@@ -49,7 +49,7 @@ public class ControladoraSimulado extends AppCompatActivity {
         pegarOutraClasse();
         contruirQuestoes();
         construirQuestao(questionario.get(0).getQuestao());
-        checarSalvar();
+        //checarSalvar();
         //Log.i("raiva", questoes.size() + "");
         tempoS = questoes.size() * minPQ; //1min para cada questão ser respondida.
         mensagem("Boa sorte, você tem 1 (um) minuto para responder cada questão.");
@@ -60,7 +60,10 @@ public class ControladoraSimulado extends AppCompatActivity {
         rdGrupo.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                atualizarResposta();
+                int index = rdGrupo.indexOfChild(findViewById(rdGrupo.getCheckedRadioButtonId()));
+                if (index != -1) {
+                    atualizarResposta();
+                }
             }
 
         });
@@ -90,8 +93,11 @@ public class ControladoraSimulado extends AppCompatActivity {
     }
 
     public void avancar(View view) {
+        atualizarResposta();
         if (posicao == questionario.size() - 1) {
             posicao = questionario.size() - 1;
+            checarSalvar();
+
         } else {
             posicao++;
         }
@@ -101,6 +107,7 @@ public class ControladoraSimulado extends AppCompatActivity {
     }
 
     public void regredir(View view) {
+        atualizarResposta();
         if (posicao == 0) {
             posicao = 0;
         } else {
