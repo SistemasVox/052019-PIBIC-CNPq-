@@ -49,7 +49,7 @@ public class ControladoraSimulado extends AppCompatActivity {
         pegarOutraClasse();
         contruirQuestoes();
         construirQuestao(questionario.get(0).getQuestao());
-        //checarSalvar();
+        checarSalvar();
         //Log.i("raiva", questoes.size() + "");
         tempoS = questoes.size() * minPQ; //1min para cada questão ser respondida.
         mensagem("Boa sorte, você tem 1 (um) minuto para responder cada questão.");
@@ -96,8 +96,6 @@ public class ControladoraSimulado extends AppCompatActivity {
         atualizarResposta();
         if (posicao == questionario.size() - 1) {
             posicao = questionario.size() - 1;
-            checarSalvar();
-
         } else {
             posicao++;
         }
@@ -170,15 +168,14 @@ public class ControladoraSimulado extends AppCompatActivity {
 
         //Log.i("raiva", alternativas.toString());
 
+        rdGrupo.removeAllViews();
+
         for (int i = 0; i < alternativas.size(); i++) {
-            //arrayListButtons.get(i).setChecked(false);
-            rdGrupo.clearCheck();
-            // ocultarTodos();
-            arrayListButtons.get(i).setVisibility(View.VISIBLE);
-            arrayListButtons.get(i).setText(alternativas.get(i).getResposta());
-        }
-        for (int j = alternativas.size(); j < arrayListButtons.size(); j++) {
-            arrayListButtons.get(j).setVisibility(View.INVISIBLE);
+            RadioButton rb_flash = new RadioButton(getApplicationContext());
+            //RadioButton rb_flash = findViewById(R.id.radioResposta);
+            rb_flash.setTextSize(18);
+            rb_flash.setText(alternativas.get(i).getResposta());
+            rdGrupo.addView(rb_flash);
         }
         if (questionario.get(posicao).getResposta() != -1) {
             ((RadioButton) rdGrupo.getChildAt(questionario.get(posicao).getResposta())).setChecked(true);
