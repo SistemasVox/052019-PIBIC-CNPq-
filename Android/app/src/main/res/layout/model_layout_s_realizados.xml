@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <GridLayout
+
+        android:id="@+id/gridNormal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:columnCount="4"
+        android:rowCount="1">
+
+        <ImageView
+            android:id="@+id/img1"
+
+            android:layout_height="wrap_content"
+
+            android:layout_columnSpan="1"
+            android:layout_columnWeight="1"
+            android:layout_gravity="center|fill"
+
+
+            android:src="@drawable/ic_artes" />
+
+        <TextView
+            android:id="@+id/txtDataS"
+
+            android:layout_height="wrap_content"
+            android:layout_row="0"
+
+            android:layout_column="1"
+            android:layout_columnSpan="1"
+            android:layout_columnWeight="1"
+
+
+            android:layout_gravity="center"
+            android:text="@string/txtData"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txtPtsS"
+
+            android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:layout_column="2"
+            android:layout_columnSpan="1"
+            android:layout_columnWeight="1"
+
+
+            android:layout_gravity="center"
+            android:text="@string/txtPts"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/imgAPRE"
+
+            android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:layout_column="3"
+
+            android:layout_columnSpan="1"
+
+
+            android:layout_columnWeight="1"
+
+            android:layout_gravity="fill"
+            android:src="@drawable/ic_finish_line" />
+    </GridLayout>
+
+
+</LinearLayout>
