@@ -1,7 +1,5 @@
 package com.sistemasvox.multquest.model;
 
-import java.util.ArrayList;
-
 public class QuestionarioProgresso {
     private String cod_p, cod_q, cod_a;
 
@@ -21,5 +19,14 @@ public class QuestionarioProgresso {
 
     public String getCod_a() {
         return cod_a;
+    }
+
+    @Override
+    public String toString() {
+        return "QuestionarioProgresso{" +
+                "cod_p= '" + cod_p + '\'' +
+                ", cod_q= '" + cod_q + '\'' +
+                ", cod_a= '" + cod_a + '\'' +
+                '}';
     }
 }

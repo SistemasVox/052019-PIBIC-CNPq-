@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -21,6 +22,7 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.navigation.NavigationView;
 import com.sistemasvox.multquest.dao.DisciplinaDAO;
+import com.sistemasvox.multquest.dao.QuestionarioDAO;
 import com.sistemasvox.multquest.model.Disciplina;
 import com.sistemasvox.multquest.ui.ControllSimulado.ControladoraMenuModoSimuladoResponderQuestao;
 
@@ -100,6 +102,18 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    public void simuladosRealizados(View v) {
+        try {
+            //mensagem(new QuestionarioDAO(getApplicationContext()).getTotalQuestionario());
+            Toast.makeText(this, new QuestionarioDAO(getApplicationContext()).getTotalQuestionario(), Toast.LENGTH_LONG).show();
+            Log.i("raiva", new QuestionarioDAO(getApplicationContext()).getQuestionariosProgresso().toString().replace("Progresso", "\n Progresso"));
+            Log.i("raiva", new QuestionarioDAO(getApplicationContext()).getQuestionarios().toString().replace("QuestionarioProgresso", "\n QuestionarioProgresso"));
+        } catch (Exception e) {
+            Log.i("raiva", e.toString());
+        }
+
     }
 
     @Override

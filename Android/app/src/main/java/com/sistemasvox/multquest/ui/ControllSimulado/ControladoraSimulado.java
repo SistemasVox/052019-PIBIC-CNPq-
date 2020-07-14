@@ -18,18 +18,23 @@ import com.sistemasvox.multquest.R;
 import com.sistemasvox.multquest.Tools.Aleatorio;
 import com.sistemasvox.multquest.dao.AlternativaDAO;
 import com.sistemasvox.multquest.dao.QuestaoDAO;
+import com.sistemasvox.multquest.dao.QuestionarioDAO;
 import com.sistemasvox.multquest.model.Alternativa;
+import com.sistemasvox.multquest.model.Progresso;
 import com.sistemasvox.multquest.model.Questionario;
 import com.sistemasvox.multquest.model.Questoes;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ControladoraSimulado extends AppCompatActivity {
 
-    private long tempoS = 600;//10min
+    private long tempoTotal = 600;//10min
     private TextView txtRel, txtDisc, txtEnun;
     private RadioGroup rdGrupo;
-    private RadioButton a, b, c, d, e;
+    // private RadioButton a, b, c, d, e;
     private ArrayList<RadioButton> arrayListButtons = new ArrayList<>();
     private ArrayList<Alternativa> alternativas = new ArrayList<>();
     private ImageView imageView;
@@ -39,6 +44,7 @@ public class ControladoraSimulado extends AppCompatActivity {
     private ArrayList<Questionario> questionario;
     private int posicao = 0;
     private int minPQ = 10;
+    private boolean respondido;
 
 
     @Override
@@ -51,7 +57,7 @@ public class ControladoraSimulado extends AppCompatActivity {
         construirQuestao(questionario.get(0).getQuestao());
         checarSalvar();
         //Log.i("raiva", questoes.size() + "");
-        tempoS = questoes.size() * minPQ; //1min para cada questão ser respondida.
+        tempoTotal = questoes.size() * minPQ; //1min para cada questão ser respondida.
         mensagem("Boa sorte, você tem 1 (um) minuto para responder cada questão.");
         cronometro();
     }
@@ -76,7 +82,7 @@ public class ControladoraSimulado extends AppCompatActivity {
                 parar++;
         }
         if (parar != 0) {
-            Toast.makeText(getApplicationContext(), "Ainda tem questões não respondidas", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Ainda possui questões não respondidas", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getApplicationContext(), "Salvando.", Toast.LENGTH_SHORT).show();
             salvarQuestoes();
@@ -89,7 +95,7 @@ public class ControladoraSimulado extends AppCompatActivity {
         int index = rdGrupo.indexOfChild(findViewById(rdGrupo.getCheckedRadioButtonId()));
         // Toast.makeText(getApplicationContext(), index + "", Toast.LENGTH_SHORT).show();
         questionario.get(posicao).setResposta(index);
-        Log.i("raiva", questionario.get(posicao).getResposta() + "");
+        //Log.i("raiva", questionario.get(posicao).getResposta() + "");
     }
 
     public void avancar(View view) {
@@ -118,6 +124,7 @@ public class ControladoraSimulado extends AppCompatActivity {
     private void contruirQuestoes() {
         questoes.clear();
         questionario.clear();
+        respondido = false;
         for (int i = 0; i < conteudosSelecionados.size(); i++) {
             questoes.addAll(new QuestaoDAO(getApplicationContext()).getQuestoesConteudo(conteudosSelecionados.get(i)));
         }
@@ -206,15 +213,10 @@ public class ControladoraSimulado extends AppCompatActivity {
         Toast.makeText(this, s, Toast.LENGTH_LONG).show();
     }
 
-    private void ocultarTodos() {
-        for (int i = 0; i < 5; i++) {
-            arrayListButtons.get(i).setVisibility(View.INVISIBLE);
-        }
-    }
-
     public void proxima(View v) {
         construirQuestao(questoes.get((posicao + 1) % questoes.size()));
     }
+
 
     private void instaciarComponentes() {
         txtRel = findViewById(R.id.txtTempo);
@@ -223,16 +225,6 @@ public class ControladoraSimulado extends AppCompatActivity {
         imageView = findViewById(R.id.imgDisci);
 
         rdGrupo = findViewById(R.id.grupoRadio);
-        a = findViewById(R.id.rd1);
-        arrayListButtons.add(a);
-        b = findViewById(R.id.rd2);
-        arrayListButtons.add(b);
-        c = findViewById(R.id.rd3);
-        arrayListButtons.add(c);
-        d = findViewById(R.id.rd4);
-        arrayListButtons.add(d);
-        e = findViewById(R.id.rd5);
-        arrayListButtons.add(e);
 
         conteudosSelecionados = new ArrayList<>();
         questoes = new ArrayList<>();
@@ -242,12 +234,12 @@ public class ControladoraSimulado extends AppCompatActivity {
     private void cronometro() {
         new Thread() {
             public void run() {
-                while (tempoS >= 0) {
+                while (tempoTotal >= 0) {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            txtRel.setText("Tempo Restante: " + zero(tempoS / 3600) + ":" + zero(tempoS / 60) + ":" + zero(tempoS % 60) + ".");
-                            tempoS--;
+                            txtRel.setText("Tempo Restante: " + zero(tempoTotal / 3600) + ":" + zero(tempoTotal / 60) + ":" + zero(tempoTotal % 60) + ".");
+                            tempoTotal--;
                         }
                     });
                     try {
@@ -263,7 +255,7 @@ public class ControladoraSimulado extends AppCompatActivity {
     }
 
     private void sair() {
-        
+
         salvarQuestoes();
 
         new Thread() {
@@ -282,13 +274,41 @@ public class ControladoraSimulado extends AppCompatActivity {
     }
 
     private void salvarQuestoes() {
-        for (int i  = 0; i < questionario.size(); i ++) {
-            if (questionario.get(i).getResposta() != -1) {
-                Log.i("raiva", questionario.get(i).getQuestao().getEnunciado() + " == " + questionario.get(i).getAlternativas().get(questionario.get(i).getResposta()).getResposta());
-            } else {
-                Log.i("raiva", questionario.get(i).getQuestao().getEnunciado() + " == Ficou sem resposta.");
+
+        try {
+            if (respondido == false) {
+                String idProgresso = String.valueOf(Integer.parseInt(new QuestionarioDAO(getApplicationContext()).getTotalQuestionario()) + 1);
+
+                Progresso progresso = new Progresso(idProgresso, calTempo(questoes.size() * minPQ), calTempo((questoes.size() * minPQ) - tempoTotal), getDateTime());
+                new QuestionarioDAO(getApplicationContext()).salvarProgressoQuestionario(progresso);
+                //ArrayList<QuestionarioProgresso> questionarioRespondido = new ArrayList<>();
+
+
+                for (int i = 0; i < questionario.size(); i++) {
+                    if (questionario.get(i).getResposta() != -1) {
+                        //Log.i("raiva", questionario.get(i).getQuestao().getEnunciado() + " == " + questionario.get(i).getAlternativas().get(questionario.get(i).getResposta()).getResposta());
+                        new QuestionarioDAO(getApplicationContext()).salvarQuestionario(idProgresso, questionario.get(i).getQuestao().getCod(), questionario.get(i).getAlternativas().get(questionario.get(i).getResposta()).getCod());
+                    } else {
+                        //Log.i("raiva", questionario.get(i).getQuestao().getEnunciado() + " == Ficou sem resposta.");
+                        new QuestionarioDAO(getApplicationContext()).salvarQuestionario(idProgresso, questionario.get(i).getQuestao().getCod(), "00");
+                    }
+                }
+                respondido = true;
             }
+        } catch (Exception e) {
+            Log.i("raiva", e.getMessage());
         }
+    }
+
+    private String calTempo(long i) {
+        return zero(i / 3600) + ":" + zero(i / 60) + ":" + zero(i % 60);
+    }
+
+    private String getDateTime() {
+        //DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 
     public String zero(Long l) {

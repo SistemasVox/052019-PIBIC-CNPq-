@@ -25,4 +25,14 @@ public class Progresso {
     public String getData_time() {
         return data_time;
     }
+
+    @Override
+    public String toString() {
+        return "Progresso{" +
+                "id= '" + id + '\'' +
+                ", tempo_total= '" + tempo_total + '\'' +
+                ", tempo_realizacao= '" + tempo_realizacao + '\'' +
+                ", data_time= '" + data_time + '\'' +
+                '}';
+    }
 }

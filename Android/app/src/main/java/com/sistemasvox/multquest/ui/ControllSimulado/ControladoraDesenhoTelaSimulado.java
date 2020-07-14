@@ -46,7 +46,6 @@ public class ControladoraDesenhoTelaSimulado extends AppCompatActivity {
         pegarOutraClasse();
         contruirQuestoes();
         construirQuestao(questionario.get(0).getQuestao());
-        Log.i("raiva", questoes.size() + "");
     }
 
     public void finalizar(View view) {
