@@ -89,7 +89,21 @@ public class QuestionarioDAO {
         return questionarioProgressos;
     }
 
-    public String getConsultarProgressoQuestionario(String codP) {
+    public ArrayList<QuestionarioProgresso> getConsultarProgressoQuestionario(String codP) {
+        ArrayList<QuestionarioProgresso> questionarioProgressos = new ArrayList<>();
+        open();
+        c = db.rawQuery("SELECT DISTINCT * FROM Progresso p, Questionario q \r\n" +
+                " WHERE p.id = q.cod_p and p.id = '" + codP + "';", null);
+        while (c.moveToNext()) {
+            questionarioProgressos.add(new QuestionarioProgresso(c.getString(c.getColumnIndex("cod_p")),
+                    c.getString(c.getColumnIndex("cod_q")),
+                    c.getString(c.getColumnIndex("cod_a"))));
+        }
+        close();
+        return questionarioProgressos;
+    }
+
+    public String getConsultarTotalProgressoQuestionario(String codP) {
         String total = "0";
         open();
         c = db.rawQuery("SELECT DISTINCT COUNT(*) FROM Progresso p, Questionario q \r\n" +

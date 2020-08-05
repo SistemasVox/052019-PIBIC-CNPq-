@@ -234,7 +234,7 @@ public class ControladoraSimulado extends AppCompatActivity {
     private void cronometro() {
         new Thread() {
             public void run() {
-                while (tempoTotal >= 0) {
+                while (tempoTotal >= 0 && respondido == false) {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {

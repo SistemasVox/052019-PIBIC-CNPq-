@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +26,8 @@ import com.google.android.material.navigation.NavigationView;
 import com.sistemasvox.multquest.dao.DisciplinaDAO;
 import com.sistemasvox.multquest.dao.QuestionarioDAO;
 import com.sistemasvox.multquest.model.Disciplina;
+import com.sistemasvox.multquest.model.Progresso;
+import com.sistemasvox.multquest.model.ProgressoAdapter;
 import com.sistemasvox.multquest.ui.ControllSimulado.ControladoraMenuModoSimuladoResponderQuestao;
 
 import java.util.ArrayList;
@@ -68,11 +72,11 @@ public class MainActivity extends AppCompatActivity {
         Log.i("raiva", findViewById(R.id.graficoDisciplinas) + "");
 
         List<PieEntry> entradasGraficos = new ArrayList<>();
-        ArrayList<Disciplina> disciplinas =  new DisciplinaDAO(this).getAllDisciplinas();
+        ArrayList<Disciplina> disciplinas = new DisciplinaDAO(this).getAllDisciplinas();
 
 
         for (int i = 0; i < disciplinas.size(); i++) {
-            entradasGraficos.add(new PieEntry((float) 100/13, disciplinas.get(i).getNome()));
+            entradasGraficos.add(new PieEntry((float) 100 / 13, disciplinas.get(i).getNome()));
         }
 
         PieDataSet dataSet = new PieDataSet(entradasGraficos, "Legenda do Gráfico (disciplinas)");
@@ -108,8 +112,20 @@ public class MainActivity extends AppCompatActivity {
         try {
             //mensagem(new QuestionarioDAO(getApplicationContext()).getTotalQuestionario());
             Toast.makeText(this, new QuestionarioDAO(getApplicationContext()).getTotalQuestionario(), Toast.LENGTH_LONG).show();
+
+            ArrayList<Progresso> progressos = new QuestionarioDAO(getApplicationContext()).getQuestionariosProgresso();
+
+           ListView listView = findViewById(R.id.listSRe);
+           listView.setAdapter(new ProgressoAdapter(getApplicationContext(), progressos));
+
+
+
+
+            /*
             Log.i("raiva", new QuestionarioDAO(getApplicationContext()).getQuestionariosProgresso().toString().replace("Progresso", "\n Progresso"));
             Log.i("raiva", new QuestionarioDAO(getApplicationContext()).getQuestionarios().toString().replace("QuestionarioProgresso", "\n QuestionarioProgresso"));
+            Log.i("raiva", new QuestionarioDAO(getApplicationContext()).getConsultarTotalProgressoQuestionario("3"));
+            Log.i("raiva", new QuestionarioDAO(getApplicationContext()).getConsultarProgressoQuestionario("3").toString());*/
         } catch (Exception e) {
             Log.i("raiva", e.toString());
         }
