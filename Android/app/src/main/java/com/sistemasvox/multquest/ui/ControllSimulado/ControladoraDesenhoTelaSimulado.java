@@ -190,12 +190,12 @@ public class ControladoraDesenhoTelaSimulado extends AppCompatActivity {
         //Modificações
         txtRel.setVisibility(View.INVISIBLE);
 
-        Button voltar = findViewById(R.id.btnVoltar);
+        Button voltar = findViewById(R.id.btnVoltar1);
         voltar.setVisibility(View.INVISIBLE);
-        Button avancar = findViewById(R.id.btnAvancar);
+        Button avancar = findViewById(R.id.btnAvancar1);
         avancar.setVisibility(View.INVISIBLE);
 
-        Button finalizar = findViewById(R.id.btnFinalizar);
+        Button finalizar = findViewById(R.id.btnFinalizar1);
         finalizar.setText("Próxima");
         //finalizar.setBackgroundResource(R.drawable.ic_voltar);
         finalizar.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_right_arrow, 0);

@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -29,6 +30,7 @@ public class ControladoraSimuladoResposta extends AppCompatActivity {
     private TextView txtRel, txtDisc, txtEnun, txtResposta;
     private RadioGroup rdGrupo;
     private RadioButton radioButton;
+    private Button voltar, finalizar, proximo;
     private ArrayList<Alternativa> alternativas = new ArrayList<>();
     private ImageView imageView;
     private ArrayList<Questoes> questoes;
@@ -135,6 +137,7 @@ public class ControladoraSimuladoResposta extends AppCompatActivity {
         Toast.makeText(this, s, Toast.LENGTH_LONG).show();
     }
 
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void instaciarComponentes() {
         txtRel = findViewById(R.id.txtTempo);
@@ -146,6 +149,9 @@ public class ControladoraSimuladoResposta extends AppCompatActivity {
 
         rdGrupo = findViewById(R.id.grupoRadio);
         radioButton = clonarBotao((RadioButton) rdGrupo.getChildAt(0));
+        voltar = findViewById(R.id.btnVoltar1);
+        finalizar = findViewById(R.id.btnFinalizar1);
+        proximo = findViewById(R.id.btnAvancar1);
 
         questoes = new ArrayList<>();
         questoes.add(new QuestaoDAO(this).getQuestao(questaoSelecionada));
@@ -158,6 +164,9 @@ public class ControladoraSimuladoResposta extends AppCompatActivity {
     private void removerComponentes() {
         TextView tempo = findViewById(R.id.txtTempo);
         tempo.setVisibility(View.INVISIBLE);
+        voltar.setVisibility(View.INVISIBLE);
+        finalizar.setVisibility(View.INVISIBLE);
+        proximo.setVisibility(View.INVISIBLE);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)

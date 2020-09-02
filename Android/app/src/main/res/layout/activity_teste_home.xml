@@ -40,7 +40,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnFinalizar"
+        app:layout_constraintBottom_toTopOf="@+id/btnFinalizar1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.50"
         app:layout_constraintStart_toStartOf="parent"
@@ -176,7 +176,7 @@
 
 
     <Button
-        android:id="@+id/btnVoltar"
+        android:id="@+id/btnVoltar1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -188,7 +188,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/btnAvancar"
+        android:id="@+id/btnAvancar1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -200,7 +200,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
-        android:id="@+id/btnFinalizar"
+        android:id="@+id/btnFinalizar1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -212,8 +212,8 @@
         android:onClick="finalizar"
         android:text="@string/btnFinalizar"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnAvancar"
+        app:layout_constraintEnd_toStartOf="@+id/btnAvancar1"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/btnVoltar" />
+        app:layout_constraintStart_toEndOf="@+id/btnVoltar1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
