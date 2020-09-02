@@ -36,8 +36,8 @@ public class ControladoraSimuladoResposta extends AppCompatActivity {
     private ArrayList<Questoes> questoes;
     private ArrayList<Questionario> questionario;
     private int posicao = 0;
-    private String questaoSelecionada = "1";
-    private String alternativaSelecionada = "1";
+    private String questaoSelecionada;
+    private String alternativaSelecionada;
     private String nQuest = "";
 
 
@@ -55,16 +55,22 @@ public class ControladoraSimuladoResposta extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void responderResposta() {
-        Alternativa alternativa = new AlternativaDAO(this).getAlternativa(alternativaSelecionada);
+        Alternativa alternativa;
+        if (!alternativaSelecionada.equals("0")) {
+            alternativa = new AlternativaDAO(this).getAlternativa(alternativaSelecionada);
+        } else {
+            alternativa = new Alternativa("", "", "", "", "você deixou em branco");
+        }
         String resposta = "";
         if (alternativa.getClassificacao().equals("0")) {
-            resposta = "Está corrento! A alternativa correta é: " + alternativa.getResposta() + "\nPorque: " + alternativa.getJustificativa();
+            resposta = "Está correto! A alternativa correta é: " + alternativa.getResposta() + ".\nPorque: " + alternativa.getJustificativa() + ".";
             txtResposta.setText(resposta);
         } else {
-            resposta = "Está incorreto." + alternativa.getResposta() + "\nPorque: " + alternativa.getJustificativa();
+            resposta = "Está incorreto." + alternativa.getResposta() + ".\nPorque: " + alternativa.getJustificativa() + ".";
             txtResposta.setText(resposta);
             txtResposta.setBackgroundColor(this.getResources().getColor(R.color.errado));
         }
+
 
         for (int i = 0; i < rdGrupo.getChildCount(); i++) {
             RadioButton radioButton = (RadioButton) rdGrupo.getChildAt(i);
