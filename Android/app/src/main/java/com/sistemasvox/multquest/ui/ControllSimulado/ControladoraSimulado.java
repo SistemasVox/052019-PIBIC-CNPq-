@@ -2,6 +2,7 @@ package com.sistemasvox.multquest.ui.ControllSimulado;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -12,7 +13,9 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.sistemasvox.multquest.R;
 import com.sistemasvox.multquest.Tools.Aleatorio;
@@ -34,7 +37,7 @@ public class ControladoraSimulado extends AppCompatActivity {
     private long tempoTotal = 600;//10min
     private TextView txtRel, txtDisc, txtEnun;
     private RadioGroup rdGrupo;
-    // private RadioButton a, b, c, d, e;
+    private RadioButton radioButton;
     private ArrayList<RadioButton> arrayListButtons = new ArrayList<>();
     private ArrayList<Alternativa> alternativas = new ArrayList<>();
     private ImageView imageView;
@@ -47,6 +50,7 @@ public class ControladoraSimulado extends AppCompatActivity {
     private boolean respondido;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +102,7 @@ public class ControladoraSimulado extends AppCompatActivity {
         //Log.i("raiva", questionario.get(posicao).getResposta() + "");
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void avancar(View view) {
         atualizarResposta();
         if (posicao == questionario.size() - 1) {
@@ -110,6 +115,7 @@ public class ControladoraSimulado extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void regredir(View view) {
         atualizarResposta();
         if (posicao == 0) {
@@ -121,6 +127,7 @@ public class ControladoraSimulado extends AppCompatActivity {
         //Log.i("raiva", posicao + " reg");
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void contruirQuestoes() {
         questoes.clear();
         questionario.clear();
@@ -148,6 +155,7 @@ public class ControladoraSimulado extends AppCompatActivity {
         //Log.i("raiva", conteudosSelecionados.toString() + "");
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void construirQuestao(Questoes questao) {
         //String id_Q = String.valueOf(new Random().nextInt(Integer.parseInt(new QuestaoDAO(getApplicationContext()).getTotalQuestoes())) + 1);
         //String id_Q = "161";
@@ -165,10 +173,6 @@ public class ControladoraSimulado extends AppCompatActivity {
         int id = res.getIdentifier(name, "drawable", getPackageName());
         imageView.setImageResource(id);
 
-
-        //Toast.makeText(this, "ID: " + id + " nome: " + name, Toast.LENGTH_LONG).show();
-
-
         //alternativas.clear();
         //alternativas = desordernarAlternativas(new AlternativaDAO(getApplicationContext()).getAlternativas(questao.getCod()));
         alternativas = questionario.get(posicao).getAlternativas();
@@ -178,11 +182,13 @@ public class ControladoraSimulado extends AppCompatActivity {
         rdGrupo.removeAllViews();
 
         for (int i = 0; i < alternativas.size(); i++) {
-            RadioButton rb_flash = new RadioButton(getApplicationContext());
-            //RadioButton rb_flash = findViewById(R.id.radioResposta);
-            rb_flash.setTextSize(18);
-            rb_flash.setText(alternativas.get(i).getResposta());
-            rdGrupo.addView(rb_flash);
+            try {
+                RadioButton rb_flash = clonarBotao(radioButton);
+                rb_flash.setText(alternativas.get(i).getResposta());
+                rdGrupo.addView(rb_flash);
+            } catch (Exception e) {
+                Log.i("raiva", e.getMessage());
+            }
         }
         if (questionario.get(posicao).getResposta() != -1) {
             ((RadioButton) rdGrupo.getChildAt(questionario.get(posicao).getResposta())).setChecked(true);
@@ -213,11 +219,13 @@ public class ControladoraSimulado extends AppCompatActivity {
         Toast.makeText(this, s, Toast.LENGTH_LONG).show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void proxima(View v) {
         construirQuestao(questoes.get((posicao + 1) % questoes.size()));
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void instaciarComponentes() {
         txtRel = findViewById(R.id.txtTempo);
         txtDisc = findViewById(R.id.txtDisciplina);
@@ -225,10 +233,30 @@ public class ControladoraSimulado extends AppCompatActivity {
         imageView = findViewById(R.id.imgDisci);
 
         rdGrupo = findViewById(R.id.grupoRadio);
+        radioButton = clonarBotao((RadioButton) rdGrupo.getChildAt(0));
 
         conteudosSelecionados = new ArrayList<>();
         questoes = new ArrayList<>();
         questionario = new ArrayList<>();
+
+        removerResposta();
+    }
+
+    private void removerResposta() {
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintlayoutRadio);
+        TextView view = findViewById(R.id.txtResposta);
+        constraintLayout.removeView(view);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    private RadioButton clonarBotao(RadioButton childAt) {
+        RadioButton cloneButton = new RadioButton(getApplicationContext());
+        cloneButton.setLayoutParams(childAt.getLayoutParams());
+        cloneButton.setTextSize(childAt.getTextSize() / 3);
+        cloneButton.setTextColor(childAt.getCurrentTextColor());
+        cloneButton.setTypeface(childAt.getTypeface());
+        cloneButton.setBackground(childAt.getBackground());
+        return cloneButton;
     }
 
     private void cronometro() {
@@ -248,8 +276,10 @@ public class ControladoraSimulado extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-                sair();
-                finish();
+                if (respondido == false) {
+                    sair();
+                    finish();
+                }
             }
         }.start();
     }

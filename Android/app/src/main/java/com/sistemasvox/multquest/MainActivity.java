@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -29,6 +29,7 @@ import com.sistemasvox.multquest.model.Disciplina;
 import com.sistemasvox.multquest.model.Progresso;
 import com.sistemasvox.multquest.model.ProgressoAdapter;
 import com.sistemasvox.multquest.ui.ControllSimulado.ControladoraMenuModoSimuladoResponderQuestao;
+import com.sistemasvox.multquest.ui.simuladoresRealizados.Questionario_Resultados;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void preencherGrafico(View view) {
-        PieChart grafico = (PieChart) findViewById(R.id.graficoDisciplinas);
+        PieChart grafico = findViewById(R.id.graficoDisciplinas);
         Log.i("raiva", findViewById(R.id.graficoDisciplinas) + "");
 
         List<PieEntry> entradasGraficos = new ArrayList<>();
@@ -111,13 +112,25 @@ public class MainActivity extends AppCompatActivity {
     public void simuladosRealizados(View v) {
         try {
             //mensagem(new QuestionarioDAO(getApplicationContext()).getTotalQuestionario());
-            Toast.makeText(this, new QuestionarioDAO(getApplicationContext()).getTotalQuestionario(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, new QuestionarioDAO(getApplicationContext()).getTotalQuestionario(), Toast.LENGTH_SHORT).show();
 
             ArrayList<Progresso> progressos = new QuestionarioDAO(getApplicationContext()).getQuestionariosProgresso();
 
-           ListView listView = findViewById(R.id.listSRe);
-           listView.setAdapter(new ProgressoAdapter(getApplicationContext(), progressos));
+            ListView listView = findViewById(R.id.listSRe);
+            listView.setAdapter(new ProgressoAdapter(getApplicationContext(), progressos));
 
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Progresso progresso = (Progresso) adapterView.getItemAtPosition(i);
+                    Toast.makeText(getApplicationContext(), progresso.getId(), Toast.LENGTH_SHORT).show();
+
+                    Intent iq = new Intent(MainActivity.this, Questionario_Resultados.class);
+                    iq.putExtra("progressoSelecionado", progresso.getId());
+                    startActivity(iq);
+                }
+            });
 
 
 

@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintPai"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.ControllSimulado.ControladoraSimulado">
@@ -51,6 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+
             <TextView
                 android:id="@+id/txtDisciplina"
                 android:layout_width="match_parent"
@@ -92,7 +94,6 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txtEnunciado">
@@ -142,6 +143,31 @@
                     android:text="@string/menu_home"
                     android:textSize="18sp" />
             </RadioGroup>
+
+            <TextView
+                android:id="@+id/txtResposta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@color/acerto"
+
+                android:text="@string/txtResposta"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+
+                android:textSize="20dp"
+                android:textStyle="bold|italic"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/grupoRadio"
+                app:layout_constraintVertical_bias="0.0" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

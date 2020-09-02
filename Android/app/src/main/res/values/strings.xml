@@ -25,4 +25,7 @@
     <string name="txtLoadProgresso">Carregar Progresso</string>
     <string name="txtData">25/06/2020</string>
     <string name="txtPts">Pontos: 29/30</string>
+    <string name="txtResposta">Aqui se justifica certo ou errado a alternativa escolhida.</string>
+    <string name="txtTituloQuestionario">Questionário Realizado:</string>
+    <string name="txtTituloSub">"Tempo de realização:"</string>
 </resources>
