@@ -46,7 +46,7 @@ public class ControladoraSimulado extends AppCompatActivity {
     private ArrayList<Questoes> questoes;
     private ArrayList<Questionario> questionario;
     private int posicao = 0;
-    private int minPQ = 10;
+    private int minPQ = 60;
     private boolean respondido;
 
 
@@ -64,6 +64,15 @@ public class ControladoraSimulado extends AppCompatActivity {
         tempoTotal = questoes.size() * minPQ; //1min para cada questão ser respondida.
         mensagem("Boa sorte, você tem 1 (um) minuto para responder cada questão.");
         cronometro();
+        ocultarBarraNavegacao();
+    }
+
+    private void ocultarBarraNavegacao() {
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+
     }
 
     private void checarSalvar() {
@@ -88,12 +97,24 @@ public class ControladoraSimulado extends AppCompatActivity {
         if (parar != 0) {
             Toast.makeText(getApplicationContext(), "Ainda possui questões não respondidas", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getApplicationContext(), "Salvando.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Salvando...", Toast.LENGTH_SHORT).show();
             salvarQuestoes();
             finish();
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Toast.makeText(getApplicationContext(), "Você não pode abandonar o questionário ativo. Caso faça isso, perderá os pontos restante.", Toast.LENGTH_LONG).show();
+        salvarQuestoes();
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(getApplicationContext(), "Você deve terminar de responder as questões antes de sair.", Toast.LENGTH_SHORT).show();
+    }
 
     private void atualizarResposta() {
         int index = rdGrupo.indexOfChild(findViewById(rdGrupo.getCheckedRadioButtonId()));
@@ -268,6 +289,7 @@ public class ControladoraSimulado extends AppCompatActivity {
                         public void run() {
                             txtRel.setText("Tempo Restante: " + zero(tempoTotal / 3600) + ":" + zero(tempoTotal / 60) + ":" + zero(tempoTotal % 60) + ".");
                             tempoTotal--;
+                            ocultarBarraNavegacao();
                         }
                     });
                     try {
