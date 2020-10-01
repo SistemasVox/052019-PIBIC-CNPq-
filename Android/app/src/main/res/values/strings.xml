@@ -20,7 +20,7 @@
     <string name="btnVoltar"><![CDATA[<<]]></string>
     <string name="bntAvancar"><![CDATA[>>]]></string>
     <string name="btnFinalizar">Finalizar</string>
-    <string name="txtEscolha">Escolha suas disciplinas:</string>
+    <string name="txtEscolha">Clicle e escolas suas disciplinas.</string>
     <string name="txtIniciar">Iniciar Simulado</string>
     <string name="txtLoadProgresso">Carregar Progresso</string>
     <string name="txtData">25/06/2020</string>
@@ -28,4 +28,5 @@
     <string name="txtResposta">Aqui se justifica certo ou errado a alternativa escolhida.</string>
     <string name="txtTituloQuestionario">Questionário Realizado:</string>
     <string name="txtTituloSub">"Tempo de realização:"</string>
+    <string name="btnSE">Carregar Simulados Realizados</string>
 </resources>
