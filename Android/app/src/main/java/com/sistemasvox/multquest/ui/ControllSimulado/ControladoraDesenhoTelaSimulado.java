@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 public class ControladoraDesenhoTelaSimulado extends AppCompatActivity {
 
-    private TextView txtRel, txtDisc, txtEnun;
+    private TextView txtRel, txtDisc, txtEnun, txtResposta;
     private RadioGroup rdGrupo;
     private RadioButton a, b, c, d, e;
     private ArrayList<RadioButton> arrayListButtons = new ArrayList<>();
@@ -169,6 +169,7 @@ public class ControladoraDesenhoTelaSimulado extends AppCompatActivity {
         txtRel = findViewById(R.id.txtTempo);
         txtDisc = findViewById(R.id.txtDisciplina);
         txtEnun = findViewById(R.id.txtEnunciado);
+        txtResposta = findViewById(R.id.txtResposta);
         imageView = findViewById(R.id.imgDisci);
 
         rdGrupo = findViewById(R.id.grupoRadio);
@@ -200,6 +201,7 @@ public class ControladoraDesenhoTelaSimulado extends AppCompatActivity {
         //finalizar.setBackgroundResource(R.drawable.ic_voltar);
         finalizar.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_right_arrow, 0);
         finalizar.getLayoutParams().width = finalizar.getLayoutParams().MATCH_PARENT;
+        txtResposta.setVisibility(View.INVISIBLE);
 
     }
 
