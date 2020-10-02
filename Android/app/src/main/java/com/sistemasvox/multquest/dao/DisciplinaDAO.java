@@ -49,6 +49,19 @@ public class DisciplinaDAO {
         return disciplinas;
     }
 
+    public Disciplina getDisciplinaQuestao(String cod_questao) {
+        Disciplina disciplina = new Disciplina();
+        open();
+        c = db.rawQuery("SELECT * FROM Disciplina d, Disciplina_Conteudo dc, Conteudo_Questao cq, Questoes q, Conteudo c WHERE d.cod_disciplina = dc.cod_disciplina AND dc.cod_conteudo = c.cod_conteudo  AND cq.cod_questao =  q.cod AND cq.cod_conteudo = c.cod_conteudo AND q.cod = '" + cod_questao + "';", null);
+        while (c.moveToNext()) {
+            return new Disciplina(c.getString(c.getColumnIndex("cod_disciplina")),
+                    c.getString(c.getColumnIndex("nome_disciplina")),
+                    c.getString(c.getColumnIndex("cod_area")));
+        }
+        close();
+        return disciplina;
+    }
+
     public ArrayList<Disciplina> getAllDisciplinas(String nomeArea) {
         ArrayList<Disciplina> disciplinas = new ArrayList<Disciplina>();
         open();

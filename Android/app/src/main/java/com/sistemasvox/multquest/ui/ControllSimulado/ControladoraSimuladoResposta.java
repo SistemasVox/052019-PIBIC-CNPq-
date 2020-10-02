@@ -63,10 +63,10 @@ public class ControladoraSimuladoResposta extends AppCompatActivity {
         }
         String resposta = "";
         if (alternativa.getClassificacao().equals("0")) {
-            resposta = "Está correto! A alternativa correta é: " + alternativa.getResposta() + ".\nPorque: " + alternativa.getJustificativa() + ".";
+            resposta = "Está correto! A alternativa correta é: " + alternativa.getResposta() + ".\nPorque: " + alternativa.getJustificativa();
             txtResposta.setText(resposta);
         } else {
-            resposta = "Está incorreto." + alternativa.getResposta() + ".\nPorque: " + alternativa.getJustificativa() + ".";
+            resposta = "Está incorreto. " + alternativa.getResposta() + ".\nPorque: " + alternativa.getJustificativa();
             txtResposta.setText(resposta);
             txtResposta.setBackgroundColor(this.getResources().getColor(R.color.errado));
         }

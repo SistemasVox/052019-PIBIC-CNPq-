@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
     public void simuladosRealizados(View v) {
         try {
             //mensagem(new QuestionarioDAO(getApplicationContext()).getTotalQuestionario());
-            Toast.makeText(this, new QuestionarioDAO(getApplicationContext()).getTotalQuestionario(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Atualmente você tem: " + new QuestionarioDAO(getApplicationContext()).getTotalQuestionario() + ". Simulados Realizados.", Toast.LENGTH_SHORT).show();
 
             ArrayList<Progresso> progressos = new QuestionarioDAO(getApplicationContext()).getQuestionariosProgresso();
 
@@ -131,9 +131,6 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(iq);
                 }
             });
-
-
-
             /*
             Log.i("raiva", new QuestionarioDAO(getApplicationContext()).getQuestionariosProgresso().toString().replace("Progresso", "\n Progresso"));
             Log.i("raiva", new QuestionarioDAO(getApplicationContext()).getQuestionarios().toString().replace("QuestionarioProgresso", "\n QuestionarioProgresso"));

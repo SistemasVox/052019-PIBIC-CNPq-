@@ -106,9 +106,12 @@ public class ControladoraSimulado extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Toast.makeText(getApplicationContext(), "Você não pode abandonar o questionário ativo. Caso faça isso, perderá os pontos restante.", Toast.LENGTH_LONG).show();
-        salvarQuestoes();
-        finish();
+        if (!respondido) {
+            Toast.makeText(getApplicationContext(), "Você não pode abandonar o questionário ativo. Caso faça isso, perderá os pontos restante.", Toast.LENGTH_LONG).show();
+            salvarQuestoes();
+            finish();
+        } else {
+        }
     }
 
     @Override
@@ -289,7 +292,6 @@ public class ControladoraSimulado extends AppCompatActivity {
                         public void run() {
                             txtRel.setText("Tempo Restante: " + zero(tempoTotal / 3600) + ":" + zero(tempoTotal / 60) + ":" + zero(tempoTotal % 60) + ".");
                             tempoTotal--;
-                            ocultarBarraNavegacao();
                         }
                     });
                     try {
