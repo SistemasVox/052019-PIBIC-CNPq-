@@ -11,20 +11,12 @@ import com.sistemasvox.multquest.model.Questoes;
 import java.util.ArrayList;
 
 public class QuestaoDAO {
-    private static DataBaseOpenHelper instance;
     Cursor c = null;
     private SQLiteOpenHelper openHelper;
     private SQLiteDatabase db;
 
     public QuestaoDAO(Context context) {
         this.openHelper = new DataBaseOpenHelper(context);
-    }
-
-    public static DataBaseOpenHelper getInstance(Context context) {
-        if (instance == null) {
-            instance = new DataBaseOpenHelper(context);
-        }
-        return instance;
     }
 
     public void open() {
@@ -51,8 +43,7 @@ public class QuestaoDAO {
     public String getTotalQuestaoConteudo(String nomeConteudo) {
         String total = "";
         open();
-        c = db.rawQuery("SELECT DISTINCT COUNT(*) FROM Questoes q, Conteudo c, Conteudo_Questao cq\r\n" +
-                "WHERE q.cod = cq.cod_questao and  cq.cod_conteudo = c.cod_conteudo and c.nome_conteudo = '" + nomeConteudo + "';", null);
+        c = db.rawQuery("SELECT DISTINCT COUNT(*) FROM Questoes q, Conteudo c, Conteudo_Questao cq " + " WHERE q.cod = cq.cod_questao and cq.cod_conteudo = c.cod_conteudo and c.nome_conteudo = '" + nomeConteudo + "';", null);
         while (c.moveToNext()) {
             total = c.getString(0);
         }
@@ -61,29 +52,22 @@ public class QuestaoDAO {
     }
 
     public ArrayList<Questoes> getQuestoesConteudo(String nomeConteudo) {
-        ArrayList<Questoes> temp = new ArrayList<Questoes>();
+        ArrayList<Questoes> temp = new ArrayList<>();
         open();
-        c = db.rawQuery("SELECT DISTINCT * FROM Questoes q, Conteudo c, Conteudo_Questao cq " +
-                "WHERE q.cod = cq.cod_questao and  cq.cod_conteudo = c.cod_conteudo and c.nome_conteudo = '" + nomeConteudo + "';", null);
+        c = db.rawQuery("SELECT DISTINCT * FROM Questoes q, Conteudo c, Conteudo_Questao cq" + " WHERE q.cod = cq.cod_questao and cq.cod_conteudo = c.cod_conteudo and c.nome_conteudo = '" + nomeConteudo + "';", null);
         while (c.moveToNext()) {
-            temp.add(new Questoes(c.getString(c.getColumnIndex("cod")),
-                    c.getString(c.getColumnIndex("enunciado")),
-                    c.getString(c.getColumnIndex("dificuldade")),
-                    c.getString(c.getColumnIndex("referencia"))));
+            temp.add(new Questoes(c.getString(c.getColumnIndex("cod")), c.getString(c.getColumnIndex("enunciado")), c.getString(c.getColumnIndex("dificuldade")), c.getString(c.getColumnIndex("referencia"))));
         }
         close();
         return temp;
     }
 
     public ArrayList<Questoes> getQuestoesSemAssociacao() {
-        ArrayList<Questoes> temp = new ArrayList<Questoes>();
+        ArrayList<Questoes> temp = new ArrayList<>();
         open();
         c = db.rawQuery("SELECT * FROM [Questoes] WHERE [cod] NOT IN (SELECT [cod_questao] FROM [Conteudo_Questao]);", null);
         while (c.moveToNext()) {
-            temp.add(new Questoes(c.getString(c.getColumnIndex("cod")),
-                    c.getString(c.getColumnIndex("enunciado")),
-                    c.getString(c.getColumnIndex("dificuldade")),
-                    c.getString(c.getColumnIndex("referencia"))));
+            temp.add(new Questoes(c.getString(c.getColumnIndex("cod")), c.getString(c.getColumnIndex("enunciado")), c.getString(c.getColumnIndex("dificuldade")), c.getString(c.getColumnIndex("referencia"))));
         }
         close();
         return temp;
@@ -93,10 +77,7 @@ public class QuestaoDAO {
         open();
         c = db.rawQuery("SELECT * FROM Questoes WHERE cod = '" + id + "' ; ", new String[]{});
         while (c.moveToNext()) {
-            return new Questoes(c.getString(c.getColumnIndex("cod")),
-                    c.getString(c.getColumnIndex("enunciado")),
-                    c.getString(c.getColumnIndex("dificuldade")),
-                    c.getString(c.getColumnIndex("referencia")));
+            return new Questoes(c.getString(c.getColumnIndex("cod")), c.getString(c.getColumnIndex("enunciado")), c.getString(c.getColumnIndex("dificuldade")), c.getString(c.getColumnIndex("referencia")));
         }
         close();
         return null;
@@ -105,8 +86,7 @@ public class QuestaoDAO {
     public String getConsultarQuestaoConteudo(String codQ, String codC) {
         String total = "";
         open();
-        c = db.rawQuery("SELECT DISTINCT COUNT(*) FROM Questoes q, Conteudo c, Conteudo_Questao cq\r\n" +
-                "WHERE q.cod = cq.cod_questao and  cq.cod_conteudo = c.cod_conteudo and c.cod_conteudo = '" + codC + "' and q.cod = '" + codQ + "';", null);
+        c = db.rawQuery("SELECT DISTINCT COUNT(*) FROM Questoes q, Conteudo c, Conteudo_Questao cq" + " WHERE q.cod = cq.cod_questao and cq.cod_conteudo = c.cod_conteudo and c.cod_conteudo = '" + codC + "' and q.cod = '" + codQ + "';", null);
         while (c.moveToNext()) {
             total = c.getString(0);
         }
@@ -137,8 +117,7 @@ public class QuestaoDAO {
     public String getNomeDiscQuestao(String idQ) {
         String nome = "";
         open();
-        c = db.rawQuery("SELECT nome_disciplina FROM Disciplina d, Disciplina_Conteudo dc, Conteudo_Questao cq WHERE" +
-                " d.cod_disciplina = dc.cod_disciplina AND dc.cod_conteudo = cq.cod_conteudo AND cq.cod_questao = '" + idQ + "';", null);
+        c = db.rawQuery("SELECT nome_disciplina FROM Disciplina d, Disciplina_Conteudo dc, Conteudo_Questao cq WHERE" + " d.cod_disciplina = dc.cod_disciplina AND dc.cod_conteudo = cq.cod_conteudo AND cq.cod_questao = '" + idQ + "';", null);
         while (c.moveToNext()) {
             nome = c.getString(0);
         }

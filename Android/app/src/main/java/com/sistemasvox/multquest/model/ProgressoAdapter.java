@@ -2,15 +2,18 @@ package com.sistemasvox.multquest.model;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.sistemasvox.multquest.R;
+import com.sistemasvox.multquest.Tools.Utilidades;
 import com.sistemasvox.multquest.dao.AlternativaDAO;
 import com.sistemasvox.multquest.dao.DisciplinaDAO;
 import com.sistemasvox.multquest.dao.QuestionarioDAO;
@@ -61,11 +64,11 @@ public class ProgressoAdapter extends BaseAdapter {
         ArrayList<QuestionarioProgresso> questionarioProgressos = new QuestionarioDAO(context).getConsultarProgressoQuestionario(progresso.getId());
         int cont_disci = 0;
         String disciplina = new DisciplinaDAO(context).getDisciplinaQuestao(questionarioProgressos.get(0).getCod_q()).getNome();
-        int c = 0;
+        int acertos = 0;
         for (int i = 0; i < questionarioProgressos.size(); i++) {
             if (!questionarioProgressos.get(i).getCod_a().equals("0")) {
                 if (new AlternativaDAO(context).getAlternativa(questionarioProgressos.get(i).getCod_a()).getClassificacao().equals("0")) {
-                    c++;
+                    acertos++;
                 }
             }
             //Log.i("raiva", new AlternativaDAO(context).getAlternativa(questionarioProgressos.get(i).getCod_a()).getClassificacao());
@@ -73,16 +76,31 @@ public class ProgressoAdapter extends BaseAdapter {
                 cont_disci++;
             }
         }
-        textViewPts.setText("Pontos: " + c + "/" + questionarioProgressos.size() + ".");
-        if (cont_disci == 0) {
-            Log.i("raiva", disciplina);
-            String name = "ic_" + disciplina.toLowerCase().replaceAll("[^\\p{ASCII}]", "");
-            Resources res = context.getResources();
-            int id = res.getIdentifier(name, "drawable", context.getPackageName());
-            ImageView imageView = linha.findViewById(R.id.imgDiscSR);
-            imageView.setImageResource(id);
+        textViewPts.setText("Pontos: " + acertos + "/" + questionarioProgressos.size() + ".");
+        try {
+            if (cont_disci == 0) {
+                Log.i("raiva", disciplina);
+                String name = "ic_" + disciplina.toLowerCase().replaceAll("[^\\p{ASCII}]", "");
+                Resources res = context.getResources();
+                int id = res.getIdentifier(name, "drawable", context.getPackageName());
+                ImageView imageView = linha.findViewById(R.id.imgDiscSR);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    imageView.setBackground(context.getDrawable(id));
+                } else {
+                    imageView.setImageResource(id);
+                }
+            }
+        } catch (Exception e) {
+            Log.e(Utilidades.TAG, e.getMessage());
         }
         //Log.i("raiva", new AlternativaDAO(context).getAlternativa(questionarioProgressos.get(i).getCod_a()).getResposta());
+        ImageView aprovado = linha.findViewById(R.id.imgAPRE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            aprovado.setBackground(Utilidades.getIC(context, "ic_aprovado_" + Utilidades.getAproveitamento(String.valueOf((acertos * 100) / questionarioProgressos.size()))).get(0));
+        }
+        ProgressBar process = linha.findViewById(R.id.progress_sr);
+        process.setProgress((acertos * 100) / questionarioProgressos.size());
+
 
         return linha;
     }

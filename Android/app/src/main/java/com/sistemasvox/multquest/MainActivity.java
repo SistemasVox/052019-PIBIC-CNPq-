@@ -35,117 +35,72 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
     private AppBarConfiguration mAppBarConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);/*
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
+        setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_f_simulado, R.id.nav_r_questoes,
-                R.id.nav_s_realizados, R.id.nav_p_aprendizagem, R.id.nav_sobre)
-                .setDrawerLayout(drawer)
-                .build();
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_f_simulado, R.id.nav_r_questoes, R.id.nav_s_realizados, R.id.nav_p_aprendizagem, R.id.nav_sobre).setDrawerLayout(drawer).build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-        //Toast.makeText(this, new AlternativaDAO(this).getTotalAlternativas(), Toast.LENGTH_LONG).show();
     }
 
     public void preencherGrafico(View view) {
         PieChart grafico = findViewById(R.id.graficoDisciplinas);
         Log.i("raiva", findViewById(R.id.graficoDisciplinas) + "");
-
         List<PieEntry> entradasGraficos = new ArrayList<>();
         ArrayList<Disciplina> disciplinas = new DisciplinaDAO(this).getAllDisciplinas();
-
-
         for (int i = 0; i < disciplinas.size(); i++) {
             entradasGraficos.add(new PieEntry((float) 100 / 13, disciplinas.get(i).getNome()));
         }
-
         PieDataSet dataSet = new PieDataSet(entradasGraficos, "Legenda do Gráfico (disciplinas)");
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-
         PieData pieData = new PieData(dataSet);
-
         grafico.setData(pieData);
-
         grafico.invalidate();
-
-
     }
 
     public void startEscolhas(View view) {
-
-
-        //Log.i("raiva", getIntent().getStringExtra("modoQuestao") + "");
         Intent i = new Intent(this, ControladoraMenuModoSimuladoResponderQuestao.class);
         i.putExtra("modoQuestao", getIntent().getStringExtra("modoQuestao"));
         startActivity(i);
-        //finish();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     public void simuladosRealizados(View v) {
         try {
-            //mensagem(new QuestionarioDAO(getApplicationContext()).getTotalQuestionario());
             Toast.makeText(this, "Atualmente você tem: " + new QuestionarioDAO(getApplicationContext()).getTotalQuestionario() + ". Simulados Realizados.", Toast.LENGTH_SHORT).show();
-
             ArrayList<Progresso> progressos = new QuestionarioDAO(getApplicationContext()).getQuestionariosProgresso();
-
             ListView listView = findViewById(R.id.listSRe);
             listView.setAdapter(new ProgressoAdapter(getApplicationContext(), progressos));
-
-
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Progresso progresso = (Progresso) adapterView.getItemAtPosition(i);
-                    Toast.makeText(getApplicationContext(), progresso.getId(), Toast.LENGTH_SHORT).show();
-
                     Intent iq = new Intent(MainActivity.this, Questionario_Resultados.class);
                     iq.putExtra("progressoSelecionado", progresso.getId());
                     startActivity(iq);
                 }
             });
-            /*
-            Log.i("raiva", new QuestionarioDAO(getApplicationContext()).getQuestionariosProgresso().toString().replace("Progresso", "\n Progresso"));
-            Log.i("raiva", new QuestionarioDAO(getApplicationContext()).getQuestionarios().toString().replace("QuestionarioProgresso", "\n QuestionarioProgresso"));
-            Log.i("raiva", new QuestionarioDAO(getApplicationContext()).getConsultarTotalProgressoQuestionario("3"));
-            Log.i("raiva", new QuestionarioDAO(getApplicationContext()).getConsultarProgressoQuestionario("3").toString());*/
         } catch (Exception e) {
-            Log.i("raiva", e.toString());
+            e.printStackTrace();
         }
-
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     }
 }

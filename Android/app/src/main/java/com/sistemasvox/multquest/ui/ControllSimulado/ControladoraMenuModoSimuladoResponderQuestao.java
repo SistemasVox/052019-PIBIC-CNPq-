@@ -25,13 +25,11 @@ import com.sistemasvox.multquest.model.Disciplina;
 import java.util.ArrayList;
 
 public class ControladoraMenuModoSimuladoResponderQuestao extends AppCompatActivity {
-
     private Spinner spArea, spDisc;
     private LinearLayout linearLayout;
     private ArrayList<Conteudo> conteudos;
     private ArrayList<String> conteudosSelecionados;
     private String modo = "ZZZ";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,22 +40,17 @@ public class ControladoraMenuModoSimuladoResponderQuestao extends AppCompatActiv
     }
 
     public void checarConteudos(View view) {
-        //CheckBox cb = (CheckBox) linearLayout.getChildAt(0).findViewById(R.id.checkBox);
-        //Toast.makeText(getApplicationContext(), cb.isChecked()+"", Toast.LENGTH_SHORT).show();
         int t = 0;
         conteudosSelecionados.clear();
         for (int i = 0; i < linearLayout.getChildCount(); i++) {
-            CheckBox cb = (CheckBox) linearLayout.getChildAt(i).findViewById(R.id.checkBox);
+            CheckBox cb = linearLayout.getChildAt(i).findViewById(R.id.checkBox);
             if (cb.isChecked()) {
                 conteudosSelecionados.add(conteudos.get(i).getNome());
                 t++;
             }
         }
-
-        //Log.i("raiva", conteudosSelecionados.toString() + "");
-
         try {
-            if (t > 0){
+            if (t > 0) {
                 if (modo.equals("0")) {
                     Intent intent = new Intent(this, ControladoraDesenhoTelaSimulado.class);
                     intent.putExtra("conteudosSelecionados", conteudosSelecionados);
@@ -67,25 +60,18 @@ public class ControladoraMenuModoSimuladoResponderQuestao extends AppCompatActiv
                     intent.putExtra("conteudosSelecionados", conteudosSelecionados);
                     startActivity(intent);
                 }
-                //Log.i("raiva", modo + "");
                 finish();
-            }else{
+            } else {
                 Toast.makeText(getApplicationContext(), "Selecione ao menos 1 conteúdo.", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             Log.i("raiva", e.getMessage() + "");
         }
-
-
-        //finish();
     }
 
-
     private void preencherConteudo() {
-        //Log.i("raiva", conteudos.toString() + "");
         LayoutInflater inflater = LayoutInflater.from(this);
         linearLayout.removeAllViewsInLayout();
-
         for (int i = 0; i < conteudos.size(); i++) {
             View view = inflater.inflate(R.layout.activity_escolha_conteudos, linearLayout, false);
             CheckBox checkBox = view.findViewById(R.id.checkBox);
@@ -97,14 +83,11 @@ public class ControladoraMenuModoSimuladoResponderQuestao extends AppCompatActiv
     private void preencherTela() {
         final ArrayList<AreaConhecimento> areaConhecimentos = new AreaConhecimentoDAO(getApplicationContext()).getAreas();
         final ArrayList<String> listaDados = new ArrayList<>();
-        listaDados.add("");//Vazio selecionar
-
+        listaDados.add("");
         for (int i = 0; i < areaConhecimentos.size(); i++) {
             listaDados.add(areaConhecimentos.get(i).getNome());
         }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, listaDados);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaDados);
         spArea.setAdapter(adapter);
         spArea.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -126,7 +109,6 @@ public class ControladoraMenuModoSimuladoResponderQuestao extends AppCompatActiv
 
                         @Override
                         public void onNothingSelected(AdapterView<?> parent) {
-
                         }
                     });
                 } else {
@@ -142,13 +124,12 @@ public class ControladoraMenuModoSimuladoResponderQuestao extends AppCompatActiv
     }
 
     private void instanciarObjs() {
-        spArea = (Spinner) findViewById(R.id.spADC);
-        spDisc = (Spinner) findViewById(R.id.spDisci);
+        spArea = findViewById(R.id.spADC);
+        spDisc = findViewById(R.id.spDisci);
         linearLayout = findViewById(R.id.ae_LinearLay);
         conteudosSelecionados = new ArrayList<>();
         conteudos = new ArrayList<>();
         Intent i = getIntent();
         modo = i.getStringExtra("modoQuestao");
-        //Log.i("raiva", modo + "");
     }
 }

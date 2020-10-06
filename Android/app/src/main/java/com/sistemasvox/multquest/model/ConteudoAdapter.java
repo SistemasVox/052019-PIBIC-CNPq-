@@ -12,7 +12,6 @@ import com.sistemasvox.multquest.R;
 import java.util.List;
 
 public class ConteudoAdapter extends BaseAdapter {
-
     Context context;
     List<Conteudo> list;
 
@@ -38,17 +37,10 @@ public class ConteudoAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        //Passo 1 Criar Objetos
         Conteudo conteudo = list.get(position);
-
-        //Passo 2 Criar Linha (Lista de Layouts)
         View linha = LayoutInflater.from(context).inflate(R.layout.activity_escolha_conteudos, parent, false);
-
-        //Passo 3
         CheckBox checkBox = linha.findViewById(R.id.checkBox);
-
         checkBox.setText(conteudo.getNome());
-
         return linha;
     }
 }

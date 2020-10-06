@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +25,6 @@ import com.sistemasvox.multquest.model.Questoes;
 import java.util.ArrayList;
 
 public class ControladoraSimuladoResposta extends AppCompatActivity {
-
     private TextView txtRel, txtDisc, txtEnun, txtResposta;
     private RadioGroup rdGrupo;
     private RadioButton radioButton;
@@ -39,7 +37,6 @@ public class ControladoraSimuladoResposta extends AppCompatActivity {
     private String questaoSelecionada;
     private String alternativaSelecionada;
     private String nQuest = "";
-
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -63,15 +60,21 @@ public class ControladoraSimuladoResposta extends AppCompatActivity {
         }
         String resposta = "";
         if (alternativa.getClassificacao().equals("0")) {
-            resposta = "Está correto! A alternativa correta é: " + alternativa.getResposta() + ".\nPorque: " + alternativa.getJustificativa();
+            if (alternativa.getJustificativa().isEmpty()) {
+                resposta = "Está correto! A alternativa correta é: " + alternativa.getResposta() + ".";
+            } else {
+                resposta = "Está correto! A alternativa correta é: " + alternativa.getResposta() + ".\nPorque: " + alternativa.getJustificativa();
+            }
             txtResposta.setText(resposta);
         } else {
-            resposta = "Está incorreto. " + alternativa.getResposta() + ".\nPorque: " + alternativa.getJustificativa();
+            if (alternativa.getJustificativa().isEmpty()) {
+                resposta = "Está incorreto. " + alternativa.getResposta() + ".";
+            } else {
+                resposta = "Está incorreto. " + alternativa.getResposta() + ".\nPorque: " + alternativa.getJustificativa();
+            }
             txtResposta.setText(resposta);
             txtResposta.setBackgroundColor(this.getResources().getColor(R.color.errado));
         }
-
-
         for (int i = 0; i < rdGrupo.getChildCount(); i++) {
             RadioButton radioButton = (RadioButton) rdGrupo.getChildAt(i);
             if (radioButton.getText().toString().equals(alternativa.getResposta())) {
@@ -81,47 +84,30 @@ public class ControladoraSimuladoResposta extends AppCompatActivity {
                 rdGrupo.getChildAt(i).setEnabled(false);
             }
         }
-
     }
-
 
     private void pegarOutraClasse() {
         Intent intent = getIntent();
-        //Bundle extra = getIntent().getBundleExtra("extra");
         try {
             questaoSelecionada = intent.getStringExtra("questaoSelecionada");
             alternativaSelecionada = intent.getStringExtra("alternativaSelecionada");
             nQuest = intent.getStringExtra("nQuest");
-            //Log.i("raiva", questaoSelecionada.toString() + "");
-            //Log.i("raiva", alternativaSelecionada.toString() + "");
         } catch (Exception ex) {
             ex.printStackTrace();
             Log.i("raiva", ex.getMessage() + "");
         }
-
-        //Log.i("raiva", conteudosSelecionados.toString() + "");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void construirQuestao(Questoes questao) {
-
         txtEnun.setText(nQuest + ") " + questao.getEnunciado());
         txtDisc.setText(new QuestaoDAO(getApplicationContext()).getNomeDiscQuestao(questao.getCod()));
-
-
         String name = "ic_" + txtDisc.getText().toString().toLowerCase().replaceAll("[^\\p{ASCII}]", "");
         Resources res = getResources();
         int id = res.getIdentifier(name, "drawable", getPackageName());
         imageView.setImageResource(id);
-
-        //alternativas.clear();
-        //alternativas = desordernarAlternativas(new AlternativaDAO(getApplicationContext()).getAlternativas(questao.getCod()));
         alternativas = questionario.get(posicao).getAlternativas();
-
-        //Log.i("raiva", alternativas.toString());
-
         rdGrupo.removeAllViews();
-
         for (int i = 0; i < alternativas.size(); i++) {
             try {
                 RadioButton rb_flash = clonarBotao(radioButton);
@@ -135,14 +121,7 @@ public class ControladoraSimuladoResposta extends AppCompatActivity {
             ((RadioButton) rdGrupo.getChildAt(questionario.get(posicao).getResposta())).setChecked(true);
             Log.i("raiva", questionario.get(posicao).getResposta() + "");
         }
-
     }
-
-
-    private void mensagem(String s) {
-        Toast.makeText(this, s, Toast.LENGTH_LONG).show();
-    }
-
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void instaciarComponentes() {
@@ -150,21 +129,16 @@ public class ControladoraSimuladoResposta extends AppCompatActivity {
         txtDisc = findViewById(R.id.txtDisciplina);
         txtEnun = findViewById(R.id.txtEnunciado);
         imageView = findViewById(R.id.imgDisci);
-
         txtResposta = findViewById(R.id.txtResposta);
-
         rdGrupo = findViewById(R.id.grupoRadio);
         radioButton = clonarBotao((RadioButton) rdGrupo.getChildAt(0));
         voltar = findViewById(R.id.btnVoltar1);
         finalizar = findViewById(R.id.btnFinalizar1);
         proximo = findViewById(R.id.btnAvancar1);
-
         questoes = new ArrayList<>();
         questoes.add(new QuestaoDAO(this).getQuestao(questaoSelecionada));
-        //Log.i("raiva", questoes.toString() + "");
         questionario = new ArrayList<>();
         questionario.add(new Questionario(questoes.get(0), new AlternativaDAO(this).getAlternativas(questoes.get(0).getCod())));
-
     }
 
     private void removerComponentes() {

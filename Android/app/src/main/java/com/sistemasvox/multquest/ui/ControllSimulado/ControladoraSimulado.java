@@ -33,8 +33,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class ControladoraSimulado extends AppCompatActivity {
-
-    private long tempoTotal = 600;//10min
+    private long tempoTotal = 600;
     private TextView txtRel, txtDisc, txtEnun;
     private RadioGroup rdGrupo;
     private RadioButton radioButton;
@@ -49,7 +48,6 @@ public class ControladoraSimulado extends AppCompatActivity {
     private int minPQ = 60;
     private boolean respondido;
 
-
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +58,7 @@ public class ControladoraSimulado extends AppCompatActivity {
         contruirQuestoes();
         construirQuestao(questionario.get(0).getQuestao());
         checarSalvar();
-        //Log.i("raiva", questoes.size() + "");
-        tempoTotal = questoes.size() * minPQ; //1min para cada questão ser respondida.
+        tempoTotal = questoes.size() * minPQ;
         mensagem("Boa sorte, você tem 1 (um) minuto para responder cada questão.");
         cronometro();
         ocultarBarraNavegacao();
@@ -69,10 +66,8 @@ public class ControladoraSimulado extends AppCompatActivity {
 
     private void ocultarBarraNavegacao() {
         View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
-
     }
 
     private void checarSalvar() {
@@ -84,15 +79,13 @@ public class ControladoraSimulado extends AppCompatActivity {
                     atualizarResposta();
                 }
             }
-
         });
     }
 
     public void finalizar(View view) {
         int parar = 0;
         for (int i = 0; i < questionario.size(); i++) {
-            if (questionario.get(i).getResposta() == -1)
-                parar++;
+            if (questionario.get(i).getResposta() == -1) parar++;
         }
         if (parar != 0) {
             Toast.makeText(getApplicationContext(), "Ainda possui questões não respondidas", Toast.LENGTH_SHORT).show();
@@ -121,9 +114,7 @@ public class ControladoraSimulado extends AppCompatActivity {
 
     private void atualizarResposta() {
         int index = rdGrupo.indexOfChild(findViewById(rdGrupo.getCheckedRadioButtonId()));
-        // Toast.makeText(getApplicationContext(), index + "", Toast.LENGTH_SHORT).show();
         questionario.get(posicao).setResposta(index);
-        //Log.i("raiva", questionario.get(posicao).getResposta() + "");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -135,8 +126,6 @@ public class ControladoraSimulado extends AppCompatActivity {
             posicao++;
         }
         construirQuestao(questionario.get(posicao).getQuestao());
-        //Log.i("raiva", posicao + " ava");
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -148,7 +137,6 @@ public class ControladoraSimulado extends AppCompatActivity {
             posicao--;
         }
         construirQuestao(questionario.get(posicao).getQuestao());
-        //Log.i("raiva", posicao + " reg");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -167,44 +155,24 @@ public class ControladoraSimulado extends AppCompatActivity {
 
     private void pegarOutraClasse() {
         Intent intent = getIntent();
-        //Bundle extra = getIntent().getBundleExtra("extra");
         try {
             conteudosSelecionados = intent.getStringArrayListExtra("conteudosSelecionados");
-            // Log.i("raiva", conteudosSelecionados.toString() + "");
         } catch (Exception ex) {
             ex.printStackTrace();
             Log.i("raiva", ex.getMessage() + "");
         }
-
-        //Log.i("raiva", conteudosSelecionados.toString() + "");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void construirQuestao(Questoes questao) {
-        //String id_Q = String.valueOf(new Random().nextInt(Integer.parseInt(new QuestaoDAO(getApplicationContext()).getTotalQuestoes())) + 1);
-        //String id_Q = "161";
-        //Questoes questao = new QuestaoDAO(getApplicationContext()).getQuestao(id_Q);
-        //Toast.makeText(this, "ID: "+ id_Q, Toast.LENGTH_LONG).show();
-        // Log.i("raiva", questoes.size() + "");
-
-
         txtEnun.setText((posicao + 1) + ") " + questao.getEnunciado());
         txtDisc.setText(new QuestaoDAO(getApplicationContext()).getNomeDiscQuestao(questao.getCod()));
-
-
         String name = "ic_" + txtDisc.getText().toString().toLowerCase().replaceAll("[^\\p{ASCII}]", "");
         Resources res = getResources();
         int id = res.getIdentifier(name, "drawable", getPackageName());
         imageView.setImageResource(id);
-
-        //alternativas.clear();
-        //alternativas = desordernarAlternativas(new AlternativaDAO(getApplicationContext()).getAlternativas(questao.getCod()));
         alternativas = questionario.get(posicao).getAlternativas();
-
-        //Log.i("raiva", alternativas.toString());
-
         rdGrupo.removeAllViews();
-
         for (int i = 0; i < alternativas.size(); i++) {
             try {
                 RadioButton rb_flash = clonarBotao(radioButton);
@@ -218,7 +186,6 @@ public class ControladoraSimulado extends AppCompatActivity {
             ((RadioButton) rdGrupo.getChildAt(questionario.get(posicao).getResposta())).setChecked(true);
             Log.i("raiva", questionario.get(posicao).getResposta() + "");
         }
-
     }
 
     private ArrayList<Alternativa> desordernarAlternativas(ArrayList<Alternativa> alternativas) {
@@ -248,21 +215,17 @@ public class ControladoraSimulado extends AppCompatActivity {
         construirQuestao(questoes.get((posicao + 1) % questoes.size()));
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void instaciarComponentes() {
         txtRel = findViewById(R.id.txtTempo);
         txtDisc = findViewById(R.id.txtDisciplina);
         txtEnun = findViewById(R.id.txtEnunciado);
         imageView = findViewById(R.id.imgDisci);
-
         rdGrupo = findViewById(R.id.grupoRadio);
         radioButton = clonarBotao((RadioButton) rdGrupo.getChildAt(0));
-
         conteudosSelecionados = new ArrayList<>();
         questoes = new ArrayList<>();
         questionario = new ArrayList<>();
-
         removerResposta();
     }
 
@@ -309,41 +272,29 @@ public class ControladoraSimulado extends AppCompatActivity {
     }
 
     private void sair() {
-
         salvarQuestoes();
-
         new Thread() {
             public void run() {
-
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
                         Toast.makeText(getApplicationContext(), "Seu tempo acabou.", Toast.LENGTH_SHORT).show();
-                        //System.exit(0);
                     }
                 });
-
             }
         }.start();
     }
 
     private void salvarQuestoes() {
-
         try {
             if (respondido == false) {
                 String idProgresso = String.valueOf(Integer.parseInt(new QuestionarioDAO(getApplicationContext()).getTotalQuestionario()) + 1);
-
                 Progresso progresso = new Progresso(idProgresso, calTempo(questoes.size() * minPQ), calTempo((questoes.size() * minPQ) - tempoTotal), getDateTime());
                 new QuestionarioDAO(getApplicationContext()).salvarProgressoQuestionario(progresso);
-                //ArrayList<QuestionarioProgresso> questionarioRespondido = new ArrayList<>();
-
-
                 for (int i = 0; i < questionario.size(); i++) {
                     if (questionario.get(i).getResposta() != -1) {
-                        //Log.i("raiva", questionario.get(i).getQuestao().getEnunciado() + " == " + questionario.get(i).getAlternativas().get(questionario.get(i).getResposta()).getResposta());
                         new QuestionarioDAO(getApplicationContext()).salvarQuestionario(idProgresso, questionario.get(i).getQuestao().getCod(), questionario.get(i).getAlternativas().get(questionario.get(i).getResposta()).getCod());
                     } else {
-                        //Log.i("raiva", questionario.get(i).getQuestao().getEnunciado() + " == Ficou sem resposta.");
                         new QuestionarioDAO(getApplicationContext()).salvarQuestionario(idProgresso, questionario.get(i).getQuestao().getCod(), "00");
                     }
                 }
@@ -359,7 +310,6 @@ public class ControladoraSimulado extends AppCompatActivity {
     }
 
     private String getDateTime() {
-        //DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         Date date = new Date();
         return dateFormat.format(date);

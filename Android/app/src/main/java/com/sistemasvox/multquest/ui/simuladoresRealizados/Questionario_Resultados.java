@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,7 +20,6 @@ import com.sistemasvox.multquest.ui.ControllSimulado.ControladoraSimuladoRespost
 import java.util.ArrayList;
 
 public class Questionario_Resultados extends AppCompatActivity {
-
     private TextView txtQuestTitulo, txtQuestSub;
     private String progressoSelecionado;
     private GridView gridView;
@@ -37,24 +35,18 @@ public class Questionario_Resultados extends AppCompatActivity {
 
     private void construirTabela() {
         Progresso progresso = new QuestionarioDAO(getApplicationContext()).getQuestionario(progressoSelecionado);
-        //QuestionarioProgresso questionarioProgresso = new QuestionarioDAO(getApplicationContext()).getQuestionario(progressoSelecionado.get(0));
         ArrayList<QuestionarioProgresso> questionarioProgressos = new QuestionarioDAO(getApplicationContext()).getConsultarProgressoQuestionario(progressoSelecionado);
-
         txtQuestTitulo.setText(getApplicationContext().getResources().getString(R.string.txtTituloQuestionario) + "\n" + progresso.getData_time());
         txtQuestSub.setText(getApplicationContext().getResources().getString(R.string.txtTituloSub) + " " + progresso.getTempo_realizacao());
-
         gridView.setAdapter(new TabelaQuestoesAdapter(getApplicationContext(), questionarioProgressos));
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 QuestionarioProgresso questoes = (QuestionarioProgresso) adapterView.getItemAtPosition(i);
-                Toast.makeText(getApplicationContext(), questoes.getCod_q(), Toast.LENGTH_SHORT).show();
-
                 Intent iq = new Intent(Questionario_Resultados.this, ControladoraSimuladoResposta.class);
                 iq.putExtra("questaoSelecionada", questoes.getCod_q());
                 iq.putExtra("alternativaSelecionada", questoes.getCod_a());
                 iq.putExtra("nQuest", String.valueOf(i + 1));
-
                 startActivity(iq);
             }
         });
@@ -76,6 +68,4 @@ public class Questionario_Resultados extends AppCompatActivity {
         txtQuestSub = findViewById(R.id.txtQuestSub);
         gridView = findViewById(R.id.gridView);
     }
-
-
 }

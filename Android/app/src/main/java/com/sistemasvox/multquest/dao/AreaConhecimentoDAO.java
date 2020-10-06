@@ -10,20 +10,12 @@ import com.sistemasvox.multquest.model.AreaConhecimento;
 import java.util.ArrayList;
 
 public class AreaConhecimentoDAO {
-    private static DataBaseOpenHelper instance;
     Cursor c = null;
     private SQLiteOpenHelper openHelper;
     private SQLiteDatabase db;
 
     public AreaConhecimentoDAO(Context context) {
         this.openHelper = new DataBaseOpenHelper(context);
-    }
-
-    public static DataBaseOpenHelper getInstance(Context context) {
-        if (instance == null) {
-            instance = new DataBaseOpenHelper(context);
-        }
-        return instance;
     }
 
     public void open() {
@@ -37,15 +29,13 @@ public class AreaConhecimentoDAO {
     }
 
     public ArrayList<AreaConhecimento> getAreas() {
-        ArrayList<AreaConhecimento> areaConhecimentos = new ArrayList<AreaConhecimento>();
+        ArrayList<AreaConhecimento> areaConhecimentos = new ArrayList<>();
         open();
         c = db.rawQuery("SELECT * FROM [Area_Conhecimento];", null);
         while (c.moveToNext()) {
-            areaConhecimentos.add(new AreaConhecimento(c.getString(c.getColumnIndex("cod_area")),
-                    c.getString(c.getColumnIndex("nome_area"))));
+            areaConhecimentos.add(new AreaConhecimento(c.getString(c.getColumnIndex("cod_area")), c.getString(c.getColumnIndex("nome_area"))));
         }
         close();
         return areaConhecimentos;
     }
-
 }

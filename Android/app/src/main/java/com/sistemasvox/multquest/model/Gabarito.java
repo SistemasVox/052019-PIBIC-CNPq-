@@ -3,10 +3,6 @@ package com.sistemasvox.multquest.model;
 public class Gabarito {
     private String Questao, Alternativa;
 
-    public Gabarito() {
-        super();
-    }
-
     public Gabarito(String questao) {
         super();
         Questao = questao;
