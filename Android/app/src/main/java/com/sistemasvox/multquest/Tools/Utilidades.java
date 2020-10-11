@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import com.sistemasvox.multquest.model.Disciplina;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
@@ -24,6 +26,15 @@ public class Utilidades {
             }
         }
         return drawables;
+    }
+
+    public static boolean disciplinaDiferente(ArrayList<Disciplina> disciplinas, String nomeDiscQuestao) {
+        for (int i = 0; i < disciplinas.size(); i++) {
+            if (disciplinas.get(i).getNome().equals(nomeDiscQuestao)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static String getAproveitamento(String valor) {

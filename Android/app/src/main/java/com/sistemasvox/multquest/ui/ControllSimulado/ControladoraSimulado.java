@@ -61,7 +61,6 @@ public class ControladoraSimulado extends AppCompatActivity {
         tempoTotal = questoes.size() * minPQ;
         mensagem("Boa sorte, você tem 1 (um) minuto para responder cada questão.");
         cronometro();
-        ocultarBarraNavegacao();
     }
 
     private void ocultarBarraNavegacao() {
@@ -288,7 +287,7 @@ public class ControladoraSimulado extends AppCompatActivity {
     private void salvarQuestoes() {
         try {
             if (respondido == false) {
-                String idProgresso = String.valueOf(Integer.parseInt(new QuestionarioDAO(getApplicationContext()).getTotalQuestionario()) + 1);
+                String idProgresso = String.valueOf(Integer.parseInt(new QuestionarioDAO(getApplicationContext()).getTotalProgresso()) + 1);
                 Progresso progresso = new Progresso(idProgresso, calTempo(questoes.size() * minPQ), calTempo((questoes.size() * minPQ) - tempoTotal), getDateTime());
                 new QuestionarioDAO(getApplicationContext()).salvarProgressoQuestionario(progresso);
                 for (int i = 0; i < questionario.size(); i++) {

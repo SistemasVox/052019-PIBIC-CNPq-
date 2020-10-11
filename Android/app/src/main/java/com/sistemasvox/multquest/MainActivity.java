@@ -6,7 +6,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,11 +25,14 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.navigation.NavigationView;
+import com.sistemasvox.multquest.Tools.Utilidades;
 import com.sistemasvox.multquest.dao.DisciplinaDAO;
+import com.sistemasvox.multquest.dao.QuestaoDAO;
 import com.sistemasvox.multquest.dao.QuestionarioDAO;
 import com.sistemasvox.multquest.model.Disciplina;
 import com.sistemasvox.multquest.model.Progresso;
 import com.sistemasvox.multquest.model.ProgressoAdapter;
+import com.sistemasvox.multquest.model.QuestionarioProgresso;
 import com.sistemasvox.multquest.ui.ControllSimulado.ControladoraMenuModoSimuladoResponderQuestao;
 import com.sistemasvox.multquest.ui.simuladoresRealizados.Questionario_Resultados;
 
@@ -52,10 +57,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void preencherGrafico(View view) {
+        if (!new QuestionarioDAO(this).getTotalProgresso().equals("0")) {
+            preecherSpinners(getSimuladosRealizados());
+            //escreverGrafico(getSimuladosRealizados());
+            Toast.makeText(this, "Spinners Atualizados, escolha suas disciplinas.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Realize ao menos um Simulado", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private ArrayList<Disciplina> getSimuladosRealizados() {
+
+        ArrayList<Disciplina> disciplinas = new ArrayList<>();
+
+        for (int m = 0; m < Integer.parseInt(new QuestionarioDAO(this).getTotalProgresso()); m++) {
+            ArrayList<QuestionarioProgresso> questionarioProgressos = new QuestionarioDAO(this).getConsultarProgressoQuestionario(String.valueOf(m + 1));
+            for (int i = 0; i < questionarioProgressos.size(); i++) {
+                if (!Utilidades.disciplinaDiferente(disciplinas, new QuestaoDAO(this).getNomeDiscQuestao(questionarioProgressos.get(i).getCod_q()))) {
+                    disciplinas.add(new DisciplinaDAO(this).getDisciplinaQuestao(questionarioProgressos.get(i).getCod_q()));
+                }
+            }
+        }
+        return disciplinas;
+    }
+
+    private void escreverGrafico(ArrayList<Disciplina> disciplinas, ArrayList<Disciplina> pts) {
         PieChart grafico = findViewById(R.id.graficoDisciplinas);
         Log.i("raiva", findViewById(R.id.graficoDisciplinas) + "");
         List<PieEntry> entradasGraficos = new ArrayList<>();
-        ArrayList<Disciplina> disciplinas = new DisciplinaDAO(this).getAllDisciplinas();
         for (int i = 0; i < disciplinas.size(); i++) {
             entradasGraficos.add(new PieEntry((float) 100 / 13, disciplinas.get(i).getNome()));
         }
@@ -64,6 +93,17 @@ public class MainActivity extends AppCompatActivity {
         PieData pieData = new PieData(dataSet);
         grafico.setData(pieData);
         grafico.invalidate();
+    }
+
+    private void preecherSpinners(ArrayList<Disciplina> simuladosRealizados) {
+        Spinner spDisc = findViewById(R.id.spDiscP);
+        ArrayList<String> listaDados = new ArrayList<>();
+        listaDados.add("");
+        for (int i = 0; i < simuladosRealizados.size(); i++) {
+            listaDados.add(simuladosRealizados.get(i).getNome());
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaDados);
+        spDisc.setAdapter(adapter);
     }
 
     public void startEscolhas(View view) {
@@ -80,8 +120,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void simuladosRealizados(View v) {
         try {
-            Toast.makeText(this, "Atualmente você tem: " + new QuestionarioDAO(getApplicationContext()).getTotalQuestionario() + ". Simulados Realizados.", Toast.LENGTH_SHORT).show();
-            ArrayList<Progresso> progressos = new QuestionarioDAO(getApplicationContext()).getQuestionariosProgresso();
+            Toast.makeText(this, "Atualmente você tem: " + new QuestionarioDAO(getApplicationContext()).getTotalProgresso() + ". Simulados Realizados.", Toast.LENGTH_SHORT).show();
+            ArrayList<Progresso> progressos = new QuestionarioDAO(getApplicationContext()).getAllProgressos();
             ListView listView = findViewById(R.id.listSRe);
             listView.setAdapter(new ProgressoAdapter(getApplicationContext(), progressos));
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

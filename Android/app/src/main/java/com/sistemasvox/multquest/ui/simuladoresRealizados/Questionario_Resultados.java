@@ -34,7 +34,7 @@ public class Questionario_Resultados extends AppCompatActivity {
     }
 
     private void construirTabela() {
-        Progresso progresso = new QuestionarioDAO(getApplicationContext()).getQuestionario(progressoSelecionado);
+        Progresso progresso = new QuestionarioDAO(getApplicationContext()).getProgresso(progressoSelecionado);
         ArrayList<QuestionarioProgresso> questionarioProgressos = new QuestionarioDAO(getApplicationContext()).getConsultarProgressoQuestionario(progressoSelecionado);
         txtQuestTitulo.setText(getApplicationContext().getResources().getString(R.string.txtTituloQuestionario) + "\n" + progresso.getData_time());
         txtQuestSub.setText(getApplicationContext().getResources().getString(R.string.txtTituloSub) + " " + progresso.getTempo_realizacao());

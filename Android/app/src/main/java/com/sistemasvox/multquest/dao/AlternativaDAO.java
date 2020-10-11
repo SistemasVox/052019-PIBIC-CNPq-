@@ -41,9 +41,18 @@ public class AlternativaDAO {
     }
 
     public Alternativa getAlternativa(String id) {
-        String total = "";
         open();
         c = db.rawQuery("SELECT * FROM Alternativa WHERE cod = '" + id + "' ; ", null);
+        while (c.moveToNext()) {
+            return new Alternativa(c.getString(c.getColumnIndex("cod")), c.getString(c.getColumnIndex("cod_q")), c.getString(c.getColumnIndex("classificacao")), c.getString(c.getColumnIndex("resposta")), c.getString(c.getColumnIndex("justificativa")));
+        }
+        close();
+        return null;
+    }
+
+    public Alternativa getAlternativaCorretaQuestao(String id) {
+        open();
+        c = db.rawQuery("SELECT * FROM Alternativa WHERE cod_q ='" + id + "' AND classificacao = '0';", null);
         while (c.moveToNext()) {
             return new Alternativa(c.getString(c.getColumnIndex("cod")), c.getString(c.getColumnIndex("cod_q")), c.getString(c.getColumnIndex("classificacao")), c.getString(c.getColumnIndex("resposta")), c.getString(c.getColumnIndex("justificativa")));
         }

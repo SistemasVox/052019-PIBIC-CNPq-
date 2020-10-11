@@ -16,6 +16,7 @@ import com.sistemasvox.multquest.R;
 import com.sistemasvox.multquest.Tools.Utilidades;
 import com.sistemasvox.multquest.dao.AlternativaDAO;
 import com.sistemasvox.multquest.dao.DisciplinaDAO;
+import com.sistemasvox.multquest.dao.QuestaoDAO;
 import com.sistemasvox.multquest.dao.QuestionarioDAO;
 
 import java.util.ArrayList;
@@ -62,8 +63,7 @@ public class ProgressoAdapter extends BaseAdapter {
 
 
         ArrayList<QuestionarioProgresso> questionarioProgressos = new QuestionarioDAO(context).getConsultarProgressoQuestionario(progresso.getId());
-        int cont_disci = 0;
-        String disciplina = new DisciplinaDAO(context).getDisciplinaQuestao(questionarioProgressos.get(0).getCod_q()).getNome();
+        ArrayList<Disciplina> disciplinas = new ArrayList<>();
         int acertos = 0;
         for (int i = 0; i < questionarioProgressos.size(); i++) {
             if (!questionarioProgressos.get(i).getCod_a().equals("0")) {
@@ -71,16 +71,16 @@ public class ProgressoAdapter extends BaseAdapter {
                     acertos++;
                 }
             }
-            //Log.i("raiva", new AlternativaDAO(context).getAlternativa(questionarioProgressos.get(i).getCod_a()).getClassificacao());
-            if (!disciplina.equals(new DisciplinaDAO(context).getDisciplinaQuestao(questionarioProgressos.get(0).getCod_q()).getNome())) {
-                cont_disci++;
+            if (!Utilidades.disciplinaDiferente(disciplinas, new QuestaoDAO(context).getNomeDiscQuestao(questionarioProgressos.get(i).getCod_q()))) {
+                disciplinas.add(new DisciplinaDAO(context).getDisciplinaQuestao(questionarioProgressos.get(i).getCod_q()));
             }
         }
+        Log.i("raiva", disciplinas.size() + " CD");
         textViewPts.setText("Pontos: " + acertos + "/" + questionarioProgressos.size() + ".");
         try {
-            if (cont_disci == 0) {
-                Log.i("raiva", disciplina);
-                String name = "ic_" + disciplina.toLowerCase().replaceAll("[^\\p{ASCII}]", "");
+            if (disciplinas.size() == 0) {
+                Log.i("raiva", disciplinas.toString());
+                String name = "ic_" + disciplinas.get(0).getNome().toLowerCase().replaceAll("[^\\p{ASCII}]", "");
                 Resources res = context.getResources();
                 int id = res.getIdentifier(name, "drawable", context.getPackageName());
                 ImageView imageView = linha.findViewById(R.id.imgDiscSR);

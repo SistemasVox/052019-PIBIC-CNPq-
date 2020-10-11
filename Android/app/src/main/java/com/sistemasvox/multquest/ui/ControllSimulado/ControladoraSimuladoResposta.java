@@ -61,18 +61,19 @@ public class ControladoraSimuladoResposta extends AppCompatActivity {
         String resposta = "";
         if (alternativa.getClassificacao().equals("0")) {
             if (alternativa.getJustificativa().isEmpty()) {
-                resposta = "Está correto! A alternativa correta é: " + alternativa.getResposta() + ".";
+                resposta = "Está correto! A alternativa correta é: " + alternativa.getResposta().trim() + ".";
             } else {
-                resposta = "Está correto! A alternativa correta é: " + alternativa.getResposta() + ".\nPorque: " + alternativa.getJustificativa();
+                resposta = "Está correto! A alternativa correta é: " + alternativa.getResposta().trim() + ".\nJustificativa: " + alternativa.getJustificativa().trim();
             }
             txtResposta.setText(resposta);
         } else {
             if (alternativa.getJustificativa().isEmpty()) {
-                resposta = "Está incorreto. " + alternativa.getResposta() + ".";
+                Alternativa justAlter = new AlternativaDAO(getApplicationContext()).getAlternativaCorretaQuestao(questaoSelecionada);
+                resposta = "Está incorreto. " + alternativa.getResposta().trim() + ".\nJustificativa: " + justAlter.getResposta().trim() + ". " + justAlter.getJustificativa().trim();
             } else {
-                resposta = "Está incorreto. " + alternativa.getResposta() + ".\nPorque: " + alternativa.getJustificativa();
+                resposta = "Está incorreto. " + alternativa.getResposta().trim() + ".\nJustificativa: " + alternativa.getJustificativa().trim();
             }
-            txtResposta.setText(resposta);
+            txtResposta.setText(resposta.trim());
             txtResposta.setBackgroundColor(this.getResources().getColor(R.color.errado));
         }
         for (int i = 0; i < rdGrupo.getChildCount(); i++) {
@@ -85,6 +86,7 @@ public class ControladoraSimuladoResposta extends AppCompatActivity {
             }
         }
     }
+
 
     private void pegarOutraClasse() {
         Intent intent = getIntent();
@@ -100,7 +102,7 @@ public class ControladoraSimuladoResposta extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void construirQuestao(Questoes questao) {
-        txtEnun.setText(nQuest + ") " + questao.getEnunciado());
+        txtEnun.setText((posicao + 1) + ") " + questao.getEnunciado());
         txtDisc.setText(new QuestaoDAO(getApplicationContext()).getNomeDiscQuestao(questao.getCod()));
         String name = "ic_" + txtDisc.getText().toString().toLowerCase().replaceAll("[^\\p{ASCII}]", "");
         Resources res = getResources();
@@ -158,13 +160,5 @@ public class ControladoraSimuladoResposta extends AppCompatActivity {
         cloneButton.setTypeface(childAt.getTypeface());
         cloneButton.setBackground(childAt.getBackground());
         return cloneButton;
-    }
-
-    public String zero(Long l) {
-        if (l < 10) {
-            return "0" + l;
-        } else {
-            return String.valueOf(l);
-        }
     }
 }

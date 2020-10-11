@@ -30,8 +30,8 @@ public class QuestionarioDAO {
         }
     }
 
-    public String getTotalQuestionario() {
-        String total = "";
+    public String getTotalProgresso() {
+        String total = "0";
         open();
         c = db.rawQuery("SELECT COUNT(*) FROM Progresso;", null);
         while (c.moveToNext()) {
@@ -41,7 +41,7 @@ public class QuestionarioDAO {
         return total;
     }
 
-    public Progresso getQuestionario(String id) {
+    public Progresso getProgresso(String id) {
         open();
         c = db.rawQuery("SELECT * FROM Progresso WHERE id = '" + id + "' ; ", new String[]{});
         while (c.moveToNext()) {
@@ -51,7 +51,7 @@ public class QuestionarioDAO {
         return null;
     }
 
-    public ArrayList<Progresso> getQuestionariosProgresso() {
+    public ArrayList<Progresso> getAllProgressos() {
         ArrayList<Progresso> progressos = new ArrayList<>();
         open();
         c = db.rawQuery("SELECT * FROM Progresso;", new String[]{});
