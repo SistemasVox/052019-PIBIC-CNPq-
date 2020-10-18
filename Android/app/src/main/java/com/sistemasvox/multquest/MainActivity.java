@@ -20,12 +20,14 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.navigation.NavigationView;
 import com.sistemasvox.multquest.Tools.Utilidades;
+import com.sistemasvox.multquest.dao.AlternativaDAO;
 import com.sistemasvox.multquest.dao.DisciplinaDAO;
 import com.sistemasvox.multquest.dao.QuestaoDAO;
 import com.sistemasvox.multquest.dao.QuestionarioDAO;
@@ -54,22 +56,79 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+        //controlarSpinnerAcessoEspecifico();
+    }
+
+    private void controlarSpinnerAcessoEspecifico() {
+        final Spinner spinner = findViewById(R.id.spDiscP);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (spinner.getSelectedItemPosition() == 0) {
+                    preencherGrafico(view);
+                } else {
+                    ArrayList<Double> pontos = new ArrayList<>();
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     public void preencherGrafico(View view) {
         if (!new QuestionarioDAO(this).getTotalProgresso().equals("0")) {
-            preecherSpinners(getSimuladosRealizados());
-            //escreverGrafico(getSimuladosRealizados());
+            ArrayList<Disciplina> disciplinas = getDisciplinasSimuladosRealizados();
+            preecherSpinners(disciplinas);
+            ArrayList<Double> pontos = new ArrayList<>();
+            for (int i = 0; i < disciplinas.size(); i++) {
+                pontos.add(0.0);
+            }
+            //Atualizando os pontos
+            try {
+                for (int i = 0; i < Integer.parseInt(new QuestionarioDAO(this).getTotalProgresso()); i++) {
+                    for (int j = 0; j < disciplinas.size(); j++) {
+                        pontos.set(j, (pontos.get(j) + getPtsDisciplinasSimuladosRealizados(disciplinas.get(j), String.valueOf(i + 1)) / getDisciplinasExiste(disciplinas.get(j).getNome()).size()));
+                    }
+                }
+            } catch (Exception e) {
+                Log.e(Utilidades.TAG, e.getLocalizedMessage());
+            }
+            Log.i(Utilidades.TAG, pontos.toString());
+            Log.i(Utilidades.TAG, disciplinas.toString());
+            escreverGrafico(disciplinas, pontos);
             Toast.makeText(this, "Spinners Atualizados, escolha suas disciplinas.", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Realize ao menos um Simulado", Toast.LENGTH_LONG).show();
         }
+
     }
 
-    private ArrayList<Disciplina> getSimuladosRealizados() {
+    private Double getPtsDisciplinasSimuladosRealizados(Disciplina disciplina, String cod_Prog_Ques) {
+        ArrayList<QuestionarioProgresso> questionarioProgressos = new QuestionarioDAO(this).getConsultarProgressoQuestionario(cod_Prog_Ques);
+        double acertos = 0.0;
+        double erros = 0.0;
+        for (int i = 0; i < questionarioProgressos.size(); i++) {
+            if (disciplina.getNome().equals(new QuestaoDAO(this).getNomeDiscQuestao(questionarioProgressos.get(i).getCod_q()))) {
+                if (new AlternativaDAO(this).getAlternativa(questionarioProgressos.get(i).getCod_a()).getClassificacao().equals("0")) {
+                    acertos++;
+                } else {
+                    erros++;
+                }
+            }
+        }
+        if (acertos == 0 && erros == 0) {
+            return 0.0;
+        } else {
+            return ((acertos * 100.0) / (acertos + erros));
+        }
+    }
 
+    private ArrayList<Disciplina> getDisciplinasSimuladosRealizados() {
         ArrayList<Disciplina> disciplinas = new ArrayList<>();
-
         for (int m = 0; m < Integer.parseInt(new QuestionarioDAO(this).getTotalProgresso()); m++) {
             ArrayList<QuestionarioProgresso> questionarioProgressos = new QuestionarioDAO(this).getConsultarProgressoQuestionario(String.valueOf(m + 1));
             for (int i = 0; i < questionarioProgressos.size(); i++) {
@@ -81,18 +140,56 @@ public class MainActivity extends AppCompatActivity {
         return disciplinas;
     }
 
-    private void escreverGrafico(ArrayList<Disciplina> disciplinas, ArrayList<Disciplina> pts) {
+
+    private ArrayList<Integer> getDisciplinasExiste(String nome) {
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        for (int m = 0; m < Integer.parseInt(new QuestionarioDAO(this).getTotalProgresso()); m++) {
+            if ((getDisciplinasExiste(nome, String.valueOf(m + 1)))) {
+                arrayList.add(m + 1);
+            }
+        }
+        return arrayList;
+    }
+
+    private boolean getDisciplinasExiste(String nome, String id_Progresso) {
+        ArrayList<QuestionarioProgresso> questionarioProgressos = new QuestionarioDAO(this).getConsultarProgressoQuestionario(id_Progresso);
+        for (int i = 0; i < questionarioProgressos.size(); i++) {
+            if (new QuestaoDAO(this).getNomeDiscQuestao(questionarioProgressos.get(i).getCod_q()).equals(nome)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void escreverGrafico(ArrayList<Disciplina> disciplinas, ArrayList<Double> pts) {
         PieChart grafico = findViewById(R.id.graficoDisciplinas);
-        Log.i("raiva", findViewById(R.id.graficoDisciplinas) + "");
         List<PieEntry> entradasGraficos = new ArrayList<>();
         for (int i = 0; i < disciplinas.size(); i++) {
-            entradasGraficos.add(new PieEntry((float) 100 / 13, disciplinas.get(i).getNome()));
+            entradasGraficos.add(new PieEntry((float) (pts.get(i) * 1.00), getAbreviacaoNome(disciplinas.get(i).getNome())));
         }
-        PieDataSet dataSet = new PieDataSet(entradasGraficos, "Legenda do Gráfico (disciplinas)");
+        PieDataSet dataSet = new PieDataSet(entradasGraficos, "");
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         PieData pieData = new PieData(dataSet);
         grafico.setData(pieData);
+        Description temp = new Description();
+        temp.setText("Seu aproveitamento geral em todos os Simulados Realizados.");
+        grafico.setDescription(temp);
         grafico.invalidate();
+    }
+
+    private String getAbreviacaoNome(String nome) {
+        if (nome.trim().contains(" ")) {
+            String temp = "";
+            String[] vS = nome.split(" ");
+            for (int i = 0; i < vS.length; i++) {
+                if (vS[i].length() > 2) {
+                    temp += vS[i].substring(0, 1);
+                }
+            }
+            return temp;
+        } else {
+            return nome;
+        }
     }
 
     private void preecherSpinners(ArrayList<Disciplina> simuladosRealizados) {

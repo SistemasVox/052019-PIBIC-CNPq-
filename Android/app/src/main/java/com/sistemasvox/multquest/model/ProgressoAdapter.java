@@ -78,7 +78,7 @@ public class ProgressoAdapter extends BaseAdapter {
         Log.i("raiva", disciplinas.size() + " CD");
         textViewPts.setText("Pontos: " + acertos + "/" + questionarioProgressos.size() + ".");
         try {
-            if (disciplinas.size() == 0) {
+            if (disciplinas.size() == 1) {
                 Log.i("raiva", disciplinas.toString());
                 String name = "ic_" + disciplinas.get(0).getNome().toLowerCase().replaceAll("[^\\p{ASCII}]", "");
                 Resources res = context.getResources();
