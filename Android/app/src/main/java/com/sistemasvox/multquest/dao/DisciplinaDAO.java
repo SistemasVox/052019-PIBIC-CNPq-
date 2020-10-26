@@ -50,6 +50,17 @@ public class DisciplinaDAO {
         return disciplina;
     }
 
+    public Disciplina getDisciplinaName(String name) {
+        Disciplina disciplina = new Disciplina();
+        open();
+        c = db.rawQuery("SELECT * FROM Disciplina WHERE nome_disciplina = '" + name + "';", null);
+        while (c.moveToNext()) {
+            return new Disciplina(c.getString(c.getColumnIndex("cod_disciplina")), c.getString(c.getColumnIndex("nome_disciplina")), c.getString(c.getColumnIndex("cod_area")));
+        }
+        close();
+        return disciplina;
+    }
+
     public Disciplina getDisciplinaQuestao(String cod_questao) {
         Disciplina disciplina = new Disciplina();
         open();

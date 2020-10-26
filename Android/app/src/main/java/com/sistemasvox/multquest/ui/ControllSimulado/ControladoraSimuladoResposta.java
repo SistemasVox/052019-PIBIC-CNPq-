@@ -102,7 +102,11 @@ public class ControladoraSimuladoResposta extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void construirQuestao(Questoes questao) {
-        txtEnun.setText((posicao + 1) + ") " + questao.getEnunciado());
+        if (nQuest.isEmpty()) {
+            txtEnun.setText((posicao + 1) + ") " + questao.getEnunciado());
+        } else {
+            txtEnun.setText(nQuest + ") " + questao.getEnunciado());
+        }
         txtDisc.setText(new QuestaoDAO(getApplicationContext()).getNomeDiscQuestao(questao.getCod()));
         String name = "ic_" + txtDisc.getText().toString().toLowerCase().replaceAll("[^\\p{ASCII}]", "");
         Resources res = getResources();

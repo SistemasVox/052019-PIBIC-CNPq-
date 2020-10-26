@@ -1,6 +1,7 @@
 package com.sistemasvox.multquest;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -43,6 +44,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
+    private boolean startApp = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,14 +62,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void controlarSpinnerAcessoEspecifico() {
+
         final Spinner spinner = findViewById(R.id.spDiscP);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (spinner.getSelectedItemPosition() == 0) {
-                    preencherGrafico(view);
+                    //startSpinner();
                 } else {
-                    ArrayList<Double> pontos = new ArrayList<>();
+                    Log.i(Utilidades.TAG, spinner.getSelectedItem().toString());
+                    Disciplina disciplina = new DisciplinaDAO(getApplicationContext()).getDisciplinaName(spinner.getSelectedItem().toString());
+                    escreverGraficoEspecifico(getIDDisciplinaExiste(spinner.getSelectedItem().toString()), disciplina);
 
                 }
             }
@@ -80,23 +85,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void preencherGrafico(View view) {
+        startSpinner();
+        controlarSpinnerAcessoEspecifico();
+        /*
+
+        ArrayList<String> floats = new ArrayList<>();
+        floats.add("1");
+        floats.add("2");
+        floats.add("3");
+        ArrayList<Float> floats2 = new ArrayList<>();
+        floats2.add(new Float(50.5));
+        floats2.add(new Float(62.8));
+        floats2.add(new Float(93.9));
+        escreverGraficoEspecifico(floats, floats2, "Biologia");*/
+
+    }
+
+    private void startSpinner() {
         if (!new QuestionarioDAO(this).getTotalProgresso().equals("0")) {
             ArrayList<Disciplina> disciplinas = getDisciplinasSimuladosRealizados();
             preecherSpinners(disciplinas);
-            ArrayList<Double> pontos = new ArrayList<>();
-            for (int i = 0; i < disciplinas.size(); i++) {
-                pontos.add(0.0);
-            }
-            //Atualizando os pontos
-            try {
-                for (int i = 0; i < Integer.parseInt(new QuestionarioDAO(this).getTotalProgresso()); i++) {
-                    for (int j = 0; j < disciplinas.size(); j++) {
-                        pontos.set(j, (pontos.get(j) + getPtsDisciplinasSimuladosRealizados(disciplinas.get(j), String.valueOf(i + 1)) / getDisciplinasExiste(disciplinas.get(j).getNome()).size()));
-                    }
-                }
-            } catch (Exception e) {
-                Log.e(Utilidades.TAG, e.getLocalizedMessage());
-            }
+            ArrayList<Float> pontos = getPtsDisciplinaSimuladosRealizados(disciplinas);
             Log.i(Utilidades.TAG, pontos.toString());
             Log.i(Utilidades.TAG, disciplinas.toString());
             escreverGrafico(disciplinas, pontos);
@@ -104,13 +113,26 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Realize ao menos um Simulado", Toast.LENGTH_LONG).show();
         }
-
     }
 
-    private Double getPtsDisciplinasSimuladosRealizados(Disciplina disciplina, String cod_Prog_Ques) {
+
+    private ArrayList<Float> getPtsDisciplinaSimuladosRealizados(ArrayList<Disciplina> disciplinas) {
+        ArrayList<Float> pontos = new ArrayList<>();
+        for (int i = 0; i < disciplinas.size(); i++) {
+            pontos.add(0f);
+        }
+        for (int i = 0; i < Integer.parseInt(new QuestionarioDAO(this).getTotalProgresso()); i++) {
+            for (int j = 0; j < disciplinas.size(); j++) {
+                pontos.set(j, (pontos.get(j) + getPtsDisciplinasSimuladosRealizados(disciplinas.get(j), String.valueOf(i + 1)) / getIDDisciplinaExiste(disciplinas.get(j).getNome()).size()));
+            }
+        }
+        return pontos;
+    }
+
+    private Float getPtsDisciplinasSimuladosRealizados(Disciplina disciplina, String cod_Prog_Ques) {
         ArrayList<QuestionarioProgresso> questionarioProgressos = new QuestionarioDAO(this).getConsultarProgressoQuestionario(cod_Prog_Ques);
-        double acertos = 0.0;
-        double erros = 0.0;
+        float acertos = 0;
+        float erros = 0;
         for (int i = 0; i < questionarioProgressos.size(); i++) {
             if (disciplina.getNome().equals(new QuestaoDAO(this).getNomeDiscQuestao(questionarioProgressos.get(i).getCod_q()))) {
                 if (new AlternativaDAO(this).getAlternativa(questionarioProgressos.get(i).getCod_a()).getClassificacao().equals("0")) {
@@ -121,9 +143,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         if (acertos == 0 && erros == 0) {
-            return 0.0;
+            return 0f;
         } else {
-            return ((acertos * 100.0) / (acertos + erros));
+            return ((acertos * 100) / (acertos + erros));
         }
     }
 
@@ -141,11 +163,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private ArrayList<Integer> getDisciplinasExiste(String nome) {
-        ArrayList<Integer> arrayList = new ArrayList<>();
+    private ArrayList<String> getIDDisciplinaExiste(String nome) {
+        ArrayList<String> arrayList = new ArrayList<>();
         for (int m = 0; m < Integer.parseInt(new QuestionarioDAO(this).getTotalProgresso()); m++) {
             if ((getDisciplinasExiste(nome, String.valueOf(m + 1)))) {
-                arrayList.add(m + 1);
+                arrayList.add(String.valueOf(m + 1));
             }
         }
         return arrayList;
@@ -161,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    private void escreverGrafico(ArrayList<Disciplina> disciplinas, ArrayList<Double> pts) {
+    private void escreverGrafico(ArrayList<Disciplina> disciplinas, ArrayList<Float> pts) {
         PieChart grafico = findViewById(R.id.graficoDisciplinas);
         List<PieEntry> entradasGraficos = new ArrayList<>();
         for (int i = 0; i < disciplinas.size(); i++) {
@@ -169,11 +191,36 @@ public class MainActivity extends AppCompatActivity {
         }
         PieDataSet dataSet = new PieDataSet(entradasGraficos, "");
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        dataSet.setValueTextColor(Color.BLACK);
+        dataSet.setValueTextSize(18f);
+
         PieData pieData = new PieData(dataSet);
         grafico.setData(pieData);
         Description temp = new Description();
         temp.setText("Seu aproveitamento geral em todos os Simulados Realizados.");
+        grafico.animateX(1000);
         grafico.setDescription(temp);
+        grafico.invalidate();
+    }
+
+    private void escreverGraficoEspecifico(ArrayList<String> progressos, Disciplina disciplina) {
+        PieChart grafico = findViewById(R.id.graficoDisciplinas);
+        List<PieEntry> entradasGraficos = new ArrayList<>();
+        for (int i = 0; i < progressos.size(); i++) {
+            entradasGraficos.add(new PieEntry(getPtsDisciplinasSimuladosRealizados(disciplina, progressos.get(i)), (i + 1) + "º Simulado"));
+        }
+        PieDataSet dataSet = new PieDataSet(entradasGraficos, "");
+        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        dataSet.setValueTextColor(Color.BLACK);
+        dataSet.setValueTextSize(18f);
+
+        PieData pieData = new PieData(dataSet);
+        grafico.setData(pieData);
+        Description temp = new Description();
+        temp.setText("Seu aproveitamento em " + getAbreviacaoNome(disciplina.getNome()) + " nos Simulados Realizados.");
+        grafico.setDescription(temp);
+        grafico.animateX(1500);
         grafico.invalidate();
     }
 
