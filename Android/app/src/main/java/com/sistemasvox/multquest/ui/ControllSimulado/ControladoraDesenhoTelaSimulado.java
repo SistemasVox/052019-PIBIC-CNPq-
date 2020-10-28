@@ -18,11 +18,16 @@ import com.sistemasvox.multquest.R;
 import com.sistemasvox.multquest.Tools.Aleatorio;
 import com.sistemasvox.multquest.dao.AlternativaDAO;
 import com.sistemasvox.multquest.dao.QuestaoDAO;
+import com.sistemasvox.multquest.dao.QuestionarioDAO;
 import com.sistemasvox.multquest.model.Alternativa;
+import com.sistemasvox.multquest.model.Progresso;
 import com.sistemasvox.multquest.model.Questionario;
 import com.sistemasvox.multquest.model.Questoes;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ControladoraDesenhoTelaSimulado extends AppCompatActivity {
     private TextView txtRel, txtDisc, txtEnun, txtResposta;
@@ -49,12 +54,33 @@ public class ControladoraDesenhoTelaSimulado extends AppCompatActivity {
     public void finalizar(View view) {
         atualizarResposta();
         if (posicao == (questionario.size() - 1)) {
+            salvarQuestoes();
             Toast.makeText(getApplicationContext(), "Salvando.", Toast.LENGTH_SHORT).show();
             finish();
         } else {
             posicao++;
             construirQuestao(questionario.get(posicao).getQuestao());
         }
+    }
+
+    private void salvarQuestoes() {
+
+        String idProgresso = String.valueOf(Integer.parseInt(new QuestionarioDAO(getApplicationContext()).getTotalProgresso()) + 1);
+        Progresso progresso = new Progresso(idProgresso, "0:00", "0:00", getDateTime());
+        new QuestionarioDAO(getApplicationContext()).salvarProgressoQuestionario(progresso);
+        for (int i = 0; i < questionario.size(); i++) {
+            if (questionario.get(i).getResposta() != -1) {
+                new QuestionarioDAO(getApplicationContext()).salvarQuestionario(idProgresso, questionario.get(i).getQuestao().getCod(), questionario.get(i).getAlternativas().get(questionario.get(i).getResposta()).getCod());
+            } else {
+                new QuestionarioDAO(getApplicationContext()).salvarQuestionario(idProgresso, questionario.get(i).getQuestao().getCod(), "00");
+            }
+        }
+    }
+
+    private String getDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 
     private void atualizarResposta() {
