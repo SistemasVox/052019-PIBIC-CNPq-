@@ -135,8 +135,12 @@ public class MainActivity extends AppCompatActivity {
         float erros = 0;
         for (int i = 0; i < questionarioProgressos.size(); i++) {
             if (disciplina.getNome().equals(new QuestaoDAO(this).getNomeDiscQuestao(questionarioProgressos.get(i).getCod_q()))) {
-                if (new AlternativaDAO(this).getAlternativa(questionarioProgressos.get(i).getCod_a()).getClassificacao().equals("0")) {
-                    acertos++;
+                if (!questionarioProgressos.get(i).getCod_a().equals("0")) {
+                    if (new AlternativaDAO(this).getAlternativa(questionarioProgressos.get(i).getCod_a()).getClassificacao().equals("0")) {
+                        acertos++;
+                    } else {
+                        erros++;
+                    }
                 } else {
                     erros++;
                 }
