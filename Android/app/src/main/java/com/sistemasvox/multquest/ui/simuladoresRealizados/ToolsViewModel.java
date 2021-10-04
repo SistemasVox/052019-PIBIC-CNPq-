@@ -10,7 +10,7 @@ public class ToolsViewModel extends ViewModel {
 
     public ToolsViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("Simulados Realizados...");
+        mText.setValue("Click e veja seus Simulados Realizados...");
     }
 
     public LiveData<String> getText() {
